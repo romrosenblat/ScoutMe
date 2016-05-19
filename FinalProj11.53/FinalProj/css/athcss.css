@@ -1,0 +1,64 @@
+﻿body {
+    background-image: url('../img/background.jpg');
+}
+h3{
+    text-align:center;
+    font-family: 'Stalemate', cursive;
+   position:center;
+   margin-top:10px;
+    font-size: 48px;
+    color: #333333;
+    border: none;
+}
+
+p.agreement label{
+    width:390px;
+    text-align:left;
+    margin-top:3px;
+}
+
+.header{
+    height:60px;
+    background:#e5e5e5 ;
+    border-color:black;
+    margin-top:0;
+    position:relative; 
+}
+
+
+.indent-small {
+  margin-left: 5px;
+}
+.form-group.internal {
+  margin-bottom: 0;
+}
+.dialog-panel {
+  margin: 0px;
+}
+.datepicker-dropdown {
+  z-index: 200 !important;
+}
+.panel-body {
+    font-family: 'Balthazar', serif;
+    background: #e5e5e5;
+    /* Old browsers */
+    background: -moz-radial-gradient(center, ellipse cover, #e5e5e5 0%, #ffffff 100%);
+    /* FF3.6+ */
+    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #e5e5e5), color-stop(100%, #ffffff));
+    /* Chrome,Safari4+ */
+    background: -webkit-radial-gradient(center, ellipse cover, #e5e5e5 0%, #ffffff 100%);
+    /* Chrome10+,Safari5.1+ */
+    background: -o-radial-gradient(center, ellipse cover, #e5e5e5 0%, #ffffff 100%);
+    /* Opera 12+ */
+    background: -ms-radial-gradient(center, ellipse cover, #e5e5e5 0%, #ffffff 100%);
+    /* IE10+ */
+    background: radial-gradient(ellipse at center, #e5e5e5 0%, #ffffff 100%);
+    /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e5e5e5', endColorstr='#ffffff', GradientType=1);
+    /* IE6-9 fallback on horizontal gradient */
+    
+}
+label.control-label {
+  font-weight: 600;
+  color: #777;
+}

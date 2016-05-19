@@ -1,0 +1,286 @@
+﻿<!DOCTYPE html>
+<head>
+    <title>Athlete registration</title>
+    <link href='http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+    <link href='//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css' rel='stylesheet' type='text/css'>
+    <link href='//cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/1.8/css/bootstrap-switch.css' rel='stylesheet' type='text/css'>
+    <link href='http://davidstutz.github.io/bootstrap-multiselect/css/bootstrap-multiselect.css' rel='stylesheet' type='text/css'>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js' type='text/javascript'></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.0/js/bootstrap.min.js' type='text/javascript'></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js' type='text/javascript'></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/1.8/js/bootstrap-switch.min.js' type='text/javascript'></script>
+    <script src='http://davidstutz.github.io/bootstrap-multiselect/js/bootstrap-multiselect.js' type='text/javascript'></script>
+    <link href="css/athcss.css" rel="stylesheet" />
+    <script src="js/ajaxCalls.js"></script>
+    <script src="js/scoutCalls.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+    <script>
+
+        $(function () {
+            $("#datepicker").datepicker();
+        });
+
+
+        $(document).ready(function () {
+            listTeam()
+            listAgent()
+
+            $("#athRegister").click(function () {
+                regAth();
+                
+            })
+        });
+    </script>
+
+</head>
+<body>
+    <link href='http://fonts.googleapis.com/css?family=Stalemate|Balthazar&subset=latin,latin-ext' rel='stylesheet'
+          type='text/css'>
+    <div class='container'>
+        <div class='header'>
+            <h3><strong>Athlete Registration</strong></h3>
+        </div>
+        <div class='panel-body'>
+            <div class='form-horizontal'>
+
+                <div class='form-group'>
+                    <label class='control-label col-md-2 col-md-offset-2' for='id_email'>Login Details</label>
+                    <div class='col-md-6'>
+                        <div class='form-group'>
+                            <div class='col-md-11'>
+                                <input class='form-control' id='email' placeholder='E-mail' type='text'>
+                            </div>
+                        </div>
+                        <div class='form-group internal'>
+                            <div class='col-md-11'>
+                                <input class='form-control' id='password' placeholder='Password' type='password'>
+                            </div>
+                        </div> 
+                    </div>
+
+                </div>
+                <div class='form-group'>
+                    <label class='control-label col-md-2 col-md-offset-2'>Name</label>
+                    <div class='col-md-8'>
+
+                        <div class='col-md-3 indent-small'>
+                            <div class='form-group internal'>
+                                <input class='form-control' id='f_name' placeholder='First Name' type='text'>
+                            </div>
+                        </div>
+                        <div class='col-md-3 indent-small'>
+                            <div class='form-group internal'>
+                                <input class='form-control' id='l_name' placeholder='Last Name' type='text'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <label class='control-label col-md-2 col-md-offset-2' for='id_adults'>Date of Birth</label>
+                    <div class='col-md-8'>
+                        <div class='col-md-3 indent-small'>
+                            <div class='form-group internal'>
+                                <input type="text" id="datepicker">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <label class='control-label col-md-2 col-md-offset-2'>Contact</label>
+                    <div class='col-md-6'>
+                        <div class='form-group internal'>
+                            <div class='col-md-11'>
+                                <input class='form-control' id='phone' placeholder='Phone: (xxx) - xxx xxxx' type='text'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <label class='control-label col-md-2 col-md-offset-2'>City</label>
+                    <div class='col-md-6'>
+                        <div class='form-group internal'>
+                            <div class='col-md-11'>
+                                <select class='form-control' id='city'>
+                                    <option value="selectCity">Select your city</option>
+                                    <option value="Acrea">Acrea</option>
+                                    <option value="Afula">Afula</option>
+                                    <option value="Arad">Arad</option>
+                                    <option value="Arielb">Arielb</option>
+                                    <option value="Ashdod">Ashdod</option>
+                                    <option value="Ashkelond">Ashkelond</option>
+                                    <option value="Baqa al-Gharbiyye">Baqa al-Gharbiyye</option>
+                                    <option value="Bat Yam">Bat Yam</option>
+                                    <option value="Beershebae">Beershebae</option>
+                                    <option value="Beit She'anf">Beit She'anf</option>
+                                    <option value="Beit Shemeshg">Beit Shemeshg</option>
+                                    <option value="Beitar Illit">Beitar Illit</option>
+                                    <option value="Bnei Brakh">Bnei Brakh</option>
+                                    <option value="Dimona">Dimona</option>
+                                    <option value="Eilat">Eilat</option>
+                                    <option value="El'ad">El'ad</option>
+                                    <option value="Giv'at Ada">Giv'at Ada</option>
+                                    <option value="Givatayim">Givatayim</option>
+                                    <option value="Hadera">Hadera</option>
+                                    <option value="Haifa">Haifa</option>
+                                    <option value="Herzliya">Herzliyak</option>
+                                    <option value="Hod HaSharon">Hod HaSharon</option>
+                                    <option value="Holon">Holon</option>
+                                    <option value="Jerusalem">Jerusalem</option>
+                                    <option value="Kafr Qasimm">Kafr Qasimm</option>
+                                    <option value="Karmiell">Karmiell</option>
+                                    <option value="Kfar Saba">Kfar Saba</option>
+                                    <option value="Kfar Yona">Kfar Yona</option>
+                                    <option value="Kiryat Ata">Kiryat Ata</option>
+                                    <option value="Kiryat Bialik">Kiryat Bialik</option>
+                                    <option value="Kiryat Gat">Kiryat Gat</option>
+                                    <option value="Kiryat Malakhi">Kiryat Malakhi</option>
+                                    <option value="Kiryat Motzkin">Kiryat Motzkin</option>
+                                    <option value="Kiryat Ono">Kiryat Ono</option>
+                                    <option value="Kiryat Shmona">Kiryat Shmona</option>
+                                    <option value="Kiryat Yam">Kiryat Yam</option>
+                                    <option value="Lod">Lod</option>
+                                    <option value="Ma'ale Adumim">Ma'ale Adumim</option>
+                                    <option value="Ma'alot-Tarshiha">Ma'alot-Tarshiha</option>
+                                    <option value="Migdal HaEmek">Migdal HaEmek</option>
+                                    <option value="Modi'in Illit">Modi'in Illit</option>
+                                    <option value="Modi'in-Maccabim-Re'ut">Modi'in-Maccabim-Re'ut</option>
+                                    <option value="Nahariya">Nahariya</option>
+                                    <option value="Nazareth">Nazareth</option>
+                                    <option value="Nesher">Nesher</option>
+                                    <option value="Ness Zionaa">Ness Zionaa</option>
+                                    <option value="Netanya">Netanya</option>
+                                    <option value="Netivot">Netivot</option>
+                                    <option value="Ofakim">Ofakim</option>
+                                    <option value="Or Akivaa">Or Akivaa</option>
+                                    <option value="Or Yehuda">Or Yehuda</option>
+                                    <option value="Petah Tikvaae">Petah Tikvaae</option>
+                                    <option value="Qalansawe">Qalansawe</option>
+                                    <option value="Ra'anana">Ra'anana</option>
+                                    <option value="Rahat">Rahat</option>
+                                    <option value="Ramat Gan">Ramat Gan</option>
+                                    <option value="Ramat HaSharon">Ramat HaSharon</option>
+                                    <option value="Ramla">Ramla</option>
+                                    <option value="Rehovot">Rehovot</option>
+                                    <option value="Rishon LeZion">Rishon LeZion</option>
+                                    <option value="Rosh HaAyin">Rosh HaAyin</option>
+                                    <option value="Safeda">Safeda</option>
+                                    <option value="Sakhnin">Sakhnin</option>
+                                    <option value="Sderot">Sderot</option>
+                                    <option value="Shefa-'Amr">Shefa-'Amr</option>
+                                    <option value="Tamra">Tamra</option>
+                                    <option value="Tayibe">Tayibe</option>
+                                    <option value="Tel Aviv">Tel Aviv</option>
+                                    <option value="Tiberias">Tiberias</option>
+                                    <option value="Tira">Tira</option>
+                                    <option value="Tirat Carmel">Tirat Carmel</option>
+                                    <option value="Umm al-Fahm">Umm al-Fahm</option>
+                                    <option value="Yavne">Yavne</option>
+                                    <option value="Yehud">Yehud</option>
+                                    <option value="Yokneam">Yokneam</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <label class='control-label col-md-2 col-md-offset-2' for='height'>Height</label>
+                    <div class='col-md-8'>
+                        <div class='col-md-3'>
+                            <div class='form-group internal input-group'>
+
+                                <input class="form-control" type="text" size="3" maxlength="3" id="height" />e.g 1'76= 176
+
+                            </div>
+                        </div>
+                        <label class='control-label col-md-2'>Weight</label>
+                        <div class='col-md-3'>
+                            <div class='form-group internal input-group'>
+
+                                <input class="form-control" type="text" size="3" maxlength="3" id="weight" />
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <label class='control-label col-md-2 col-md-offset-2'>Sport</label>
+                    <div class='col-md-8'>
+                        <div class='col-md-3'>
+                            <div class='form-group internal input-group'>
+                                <select class='form-control' id='branch'>
+                                    <option></option>
+                                    <option value="Basketball">Basketball</option>
+                                    <option value="Handball">Handball</option>
+                                    <option value="Soccer">Soccer</option>
+                                </select>
+                            </div>
+                            </div>
+                        <label class='control-label col-md-2'>Goaly?</label>
+                        <div class='col-md-3'>
+                            <div class='make-switch' data-off-label='No' data-on-label='Yes'>
+                                <input id='goaly' type='checkbox' value='isGoaly'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class='form-group'>
+                    <label class='control-label col-md-2 col-md-offset-2'>Gender</label>
+                    <div class='col-md-8'>
+                        <div class='make-switch' data-off-label='Male' data-on-label='Female'>
+                            <input id='sex' type='checkbox' value='isFemale'>
+                        </div>
+                    </div>
+                </div>
+
+                <div class='form-group'>
+                    <label class='control-label col-md-2 col-md-offset-2' for='team'>Optional</label>
+                    <div class='col-md-8'>
+
+                        <div class='col-md-3 indent-small'>
+                            <div class='form-group internal'>
+                                <div class="example-wrapper" data-iscroll>
+                                    <select name="selectTeam" id="teamCheck">
+                                        <option>Hi</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='col-md-3 indent-small'>
+                            <div class='form-group internal'>
+                                <div class="example-wrapper" data-iscroll>
+                                    <select name="select-choice-agent" id="agentCheck">
+                                        <option>Bye</option>
+                                    </select>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+</div>
+
+                <div class="form-group">
+
+                    <div class='col-md-offset-4 col-md-3'>
+                        <input type="checkbox" value="accept" id="termCheck" />
+                        <label>*  I accept the <a href="terms.html">Terms and Conditions</a></label>
+                    </div>
+                </div>
+                <div class='form-group'>
+                    <div class='col-md-offset-4 col-md-3'>
+                        <button type="submit" class="btn btn-default submit" id="athRegister">Register</button>
+                    </div>
+
+                </div>
+            
+           </div>
+
+        </div>
+    </div>
+
+</body>

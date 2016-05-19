@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>ScoutMe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/snippet.css" rel="stylesheet" />
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="js/ajaxCalls.js"></script>
+    <script src="js/scoutCalls.js"></script>
+    <script>
+
+        $(function () {
+            $("#datepicker").datepicker();
+        });
+
+        $(document).ready(function () {
+            $("#register").click(function () {
+                registerAgent();
+            })
+        });
+    </script>
+</head>
+<body>
+    <!--Google Fonts-->
+    <link href='http://fonts.googleapis.com/css?family=Stalemate|Balthazar&subset=latin,latin-ext' rel='stylesheet'
+          type='text/css'>
+    <!--Font Awesome-->
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <div class="bootshape login-form">
+        <div class="col-sm-6 col-md-5 col-lg-4 col-sm-offset-2 text-center login-popup-wrap">
+            <div class="login-popup">
+                <h1 class="title"><strong>Agent Registration</strong></h1>
+               
+                    <div class="form-group">
+                        <input type="text" class="form-control text-center text" id="number" placeholder="Agent License Number">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control text-center text" id="email" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control text-center text" id="pass" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control text-center text" id="f_name" placeholder="First Name">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control text-center text" id="l_name" placeholder="Last Name">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control text-center text" id="phone" placeholder="Phone">
+                    </div>
+                    <div class="form-group">
+                        <select class='form-control' id='city'>
+                            <option value="selectCity">Select your city</option>
+                            <option value="Acrea">Acrea</option>
+                            <option value="Afula">Afula</option>
+                            <option value="Arad">Arad</option>
+                            <option value="Arielb">Arielb</option>
+                            <option value="Ashdod">Ashdod</option>
+                            <option value="Ashkelond">Ashkelond</option>
+                            <option value="Baqa al-Gharbiyye">Baqa al-Gharbiyye</option>
+                            <option value="Bat Yam">Bat Yam</option>
+                            <option value="Beershebae">Beershebae</option>
+                            <option value="Beit She'anf">Beit She'anf</option>
+                            <option value="Beit Shemeshg">Beit Shemeshg</option>
+                            <option value="Beitar Illit">Beitar Illit</option>
+                            <option value="Bnei Brakh">Bnei Brakh</option>
+                            <option value="Dimona">Dimona</option>
+                            <option value="Eilat">Eilat</option>
+                            <option value="El'ad">El'ad</option>
+                            <option value="Giv'at Ada">Giv'at Ada</option>
+                            <option value="Givatayim">Givatayim</option>
+                            <option value="Hadera">Hadera</option>
+                            <option value="Haifa">Haifa</option>
+                            <option value="Herzliya">Herzliyak</option>
+                            <option value="Hod HaSharon">Hod HaSharon</option>
+                            <option value="Holon">Holon</option>
+                            <option value="Jerusalem">Jerusalem</option>
+                            <option value="Kafr Qasimm">Kafr Qasimm</option>
+                            <option value="Karmiell">Karmiell</option>
+                            <option value="Kfar Saba">Kfar Saba</option>
+                            <option value="Kfar Yona">Kfar Yona</option>
+                            <option value="Kiryat Ata">Kiryat Ata</option>
+                            <option value="Kiryat Bialik">Kiryat Bialik</option>
+                            <option value="Kiryat Gat">Kiryat Gat</option>
+                            <option value="Kiryat Malakhi">Kiryat Malakhi</option>
+                            <option value="Kiryat Motzkin">Kiryat Motzkin</option>
+                            <option value="Kiryat Ono">Kiryat Ono</option>
+                            <option value="Kiryat Shmona">Kiryat Shmona</option>
+                            <option value="Kiryat Yam">Kiryat Yam</option>
+                            <option value="Lod">Lod</option>
+                            <option value="Ma'ale Adumim">Ma'ale Adumim</option>
+                            <option value="Ma'alot-Tarshiha">Ma'alot-Tarshiha</option>
+                            <option value="Migdal HaEmek">Migdal HaEmek</option>
+                            <option value="Modi'in Illit">Modi'in Illit</option>
+                            <option value="Modi'in-Maccabim-Re'ut">Modi'in-Maccabim-Re'ut</option>
+                            <option value="Nahariya">Nahariya</option>
+                            <option value="Nazareth">Nazareth</option>
+                            <option value="Nesher">Nesher</option>
+                            <option value="Ness Zionaa">Ness Zionaa</option>
+                            <option value="Netanya">Netanya</option>
+                            <option value="Netivot">Netivot</option>
+                            <option value="Ofakim">Ofakim</option>
+                            <option value="Or Akivaa">Or Akivaa</option>
+                            <option value="Or Yehuda">Or Yehuda</option>
+                            <option value="Petah Tikvaae">Petah Tikvaae</option>
+                            <option value="Qalansawe">Qalansawe</option>
+                            <option value="Ra'anana">Ra'anana</option>
+                            <option value="Rahat">Rahat</option>
+                            <option value="Ramat Gan">Ramat Gan</option>
+                            <option value="Ramat HaSharon">Ramat HaSharon</option>
+                            <option value="Ramla">Ramla</option>
+                            <option value="Rehovot">Rehovot</option>
+                            <option value="Rishon LeZion">Rishon LeZion</option>
+                            <option value="Rosh HaAyin">Rosh HaAyin</option>
+                            <option value="Safeda">Safeda</option>
+                            <option value="Sakhnin">Sakhnin</option>
+                            <option value="Sderot">Sderot</option>
+                            <option value="Shefa-'Amr">Shefa-'Amr</option>
+                            <option value="Tamra">Tamra</option>
+                            <option value="Tayibe">Tayibe</option>
+                            <option value="Tel Aviv">Tel Aviv</option>
+                            <option value="Tiberias">Tiberias</option>
+                            <option value="Tira">Tira</option>
+                            <option value="Tirat Carmel">Tirat Carmel</option>
+                            <option value="Umm al-Fahm">Umm al-Fahm</option>
+                            <option value="Yavne">Yavne</option>
+                            <option value="Yehud">Yehud</option>
+                            <option value="Yokneam">Yokneam</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <br />
+                        <label>Date of Birth: </label>
+                        <input type="text" id="datepicker">
+                    </div>
+
+
+                    <div class="form-group">
+                        <input type="checkbox" value="accept" id="termCheck" />
+                        <label>*  I accept the <a href="terms.html">Terms and Conditions</a></label>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-default submit" id="register">Register</button>
+                    </div>
+               
+                <div class="divider"></div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
+
