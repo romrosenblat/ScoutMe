@@ -183,4 +183,20 @@ function InsertNewVideo(request, successVideoInsert, errorCB2) {
                 success: successVideoInsert,                // data.d id the Variable data contains the data we get from serverside
                 error: errorCB
             }) // end of ajax call
-        }
+}
+
+
+function SendAthleteStats(requestDataString) {
+    var dataObj = JSON.parse(requestDataString);
+    
+    $.ajax({ // ajax call starts
+        url: 'WebService.asmx/InsertNewVideo',   
+        data: dataString,                          
+        type: 'POST',                              
+        dataType: 'json',                          
+        contentType: 'application/json; charset = utf-8', 
+        success: function(res){console.log(res)},                
+        error: function(err){console.log(err); alert(err);}
+    });
+
+}

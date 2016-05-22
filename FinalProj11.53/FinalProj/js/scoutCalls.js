@@ -1,4 +1,5 @@
-﻿
+﻿var AthleteSportType = { Soccer: 1, BasketBall: 2, HandBall: 3 };
+
 function wireLoginPage() {
     localStorage.clear();
     p1 = document.getElementById("userName").value;
@@ -14,8 +15,8 @@ function wireLoginPage() {
         var request = {
             name: p1,
             pass: p2
-    }
-  
+        }
+
     }
 
     switch (p3) {
@@ -36,7 +37,7 @@ function typecheck() {
     check = localStorage.getItem("type");
     switch (check) {
         case "Athlete":
-            window.location="athProf.html";
+            window.location = "athProf.html";
             break;
         case "Agent":
             window.location = "agentProf.html";
@@ -51,7 +52,7 @@ function s1(results) {
     localStorage.clear();
     localStorage.setItem("type", p3);
     var userObj = JSON.parse(results.d);
-    if (userObj.Id!=0) {
+    if (userObj.Id != 0) {
         localStorage.Id = userObj.Id;
         localStorage.pass = userObj.Password;
         localStorage.firstName = userObj.First_name;
@@ -68,11 +69,31 @@ function s1(results) {
         localStorage.isGolaey = userObj.IsGolaey;
         localStorage.sex = userObj.Sex;
         window.location = "athProf.html";
-       
+
     } else {
         alert("No user or Incorect credentials,please try again");
     }
 }
+
+function AthleteIsGoaly()
+{
+    return localStorage.isGolaey;
+}
+
+
+function GetAthleteType() {
+    //AthleteSportType = { Soccer: 1, BasketBall: 2, HandBall: 3 };
+    if (localStorage.sportID == "1") {
+        return AthleteSportType.Soccer;
+    }
+    else if (localStorage.sportID == "2") {
+        return AthleteSportType.BasketBall;
+    }
+    else if (localStorage.sportID == "3") {
+        return AthleteSportType.HandBall;
+    }
+}
+
 function writeAthlete() {
     $("#TopAtName").text(localStorage.firstName + " " + localStorage.lastName);
     $("#name").text(localStorage.firstName + " " + localStorage.lastName);
@@ -108,8 +129,8 @@ function s2(results) {
         localStorage.phone = userObj.Phone;
         localStorage.eMail = userObj.Email;
         localStorage.city = userObj.City;
-        window.location="agentProf.html";
-        
+        window.location = "agentProf.html";
+
     } else {
         alert("No user or Incorect credentials,please try again");
 
@@ -129,7 +150,7 @@ function s3(results) {
     localStorage.clear();
     localStorage.setItem("type", p3);
     var userObj = JSON.parse(results.d);
-    if (userObj.TeamNumber!= 0) {
+    if (userObj.TeamNumber != 0) {
         localStorage.TeamNumber = userObj.TeamNumber;
         localStorage.pass = userObj.Password;
         localStorage.firstName = userObj.First_name;
@@ -139,12 +160,12 @@ function s3(results) {
         localStorage.phone = userObj.Phone;
         localStorage.Email = userObj.Email;
         localStorage.city = userObj.City;
-        window.location="teamProf.html";
-        
+        window.location = "teamProf.html";
+
     } else {
         alert("No user or Incorect credentials,please try again");
     }
-} 
+}
 
 function writeTeam() {
     $("#Team").text(localStorage.teamName);
@@ -245,7 +266,7 @@ function editdag() {
     $("#phone").text(localStorage.phone);
     $("#email").text(localStorage.eMail);
     $("#password").text(localStorage.pass);
-    
+
 }
 
 function editTeam() {
@@ -337,7 +358,7 @@ function successEditAthlete() {
     localStorage.hight = v9;
     localStorage.weight = v8;
     alert("You have been updated");
-    window.location="athProf.html";
+    window.location = "athProf.html";
 }
 function updateAgentInfo() {
     v1 = document.getElementById("email").value;
@@ -386,7 +407,7 @@ function successEditAgent() {
     localStorage.phone = v5;
     localStorage.city = v6;
     alert("You have been updated");
-    window.location="agentProf.html";
+    window.location = "agentProf.html";
 }
 
 function updateTeamInfo() {
@@ -399,7 +420,7 @@ function updateTeamInfo() {
     if (v1 == "") {
         v1 = localStorage.Email;
     }
-   
+
     if (v3 == "") {
         v3 = localStorage.firstName;
     }
@@ -413,14 +434,14 @@ function updateTeamInfo() {
         v6 = localStorage.city;
     }
 
-    if (v1 && v3 && v4 && v5 && v6 && v7!= null) {
+    if (v1 && v3 && v4 && v5 && v6 && v7 != null) {
         request = {
             eMail: v1,
             lastNAme: v4,
             firstName: v3,
             phone: v5,
             city: v6,
-            
+
             teamNum: v7
         }
 
@@ -429,7 +450,7 @@ function updateTeamInfo() {
         alert("Please enter all fields required!")
     }
     sendTeamEdit(request, successEditTeam, errorCB);
-    
+
 }
 function successEditTeam() {
     localStorage.Email = v1;
@@ -438,7 +459,7 @@ function successEditTeam() {
     localStorage.phone = v5;
     localStorage.city = v6;
     alert("You have been updated");
-    window.location="teamProf.html";
+    window.location = "teamProf.html";
 }
 
 function registerAgent() {
@@ -477,7 +498,7 @@ function registerAgent() {
 
 function successAgentReg(results) {
     alert("Congratulation you have been added!");
-    window.location="index.html";
+    window.location = "index.html";
 
 }
 
@@ -501,7 +522,7 @@ function regTeam() {
     v7 = document.getElementById("role").value;
     v8 = document.getElementById("pass").value;
 
- 
+
     if (v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 != null) {
         request = {
             eMail: v1,
@@ -525,7 +546,7 @@ function regTeam() {
 
 function successTeamReg() {
     alert("Congratulation you have been added!");
-    window.location="index.html";
+    window.location = "index.html";
 
 }
 function listTeam() {
@@ -540,16 +561,15 @@ function successTeam(teamRes) {
     $('#teamCheck').empty();
     teamRes = $.parseJSON(teamRes.d);
     $('#teamCheck').append("<option selected value = 'not-chosen'>Choose your Team</option>");
-    
-    for (var i = 0; i < teamRes.length; i++)
-    {
-      
+
+    for (var i = 0; i < teamRes.length; i++) {
+
         var o = new Option(teamRes[i], teamRes[i]);
         /// jquerify the DOM object 'o' so we can use the html method
         $(o).html(teamRes[i]);
         $("#teamCheck").append(o);
     }
-    
+
 }
 
 
@@ -558,55 +578,55 @@ function successAgent(agentRes) {
     $('#agentCheck').empty();
     agentRes = $.parseJSON(agentRes.d);
     $('#agentCheck').append("<option selected value = 'not-chosen'>Choose your Agent</option>");
-   
+
     for (var i = 0; i < agentRes.length; i++) {
         var o = new Option(agentRes[i], agentRes[i]);
         /// jquerify the DOM object 'o' so we can use the html method
         $(o).html(agentRes[i]);
         $("#agentCheck").append(o);
-       
+
     }
-   
+
 }
 
-function AddVideo(){
-            var request = {
-                athleteID: localStorage.Id,
-                desc: Mdesc,
-                date: Mdate,
-                url: Mlink
-            }
-            InsertNewVideo(request, successVideoInsert, errorCB2);
+function AddVideo() {
+    var request = {
+        athleteID: localStorage.Id,
+        desc: Mdesc,
+        date: Mdate,
+        url: Mlink
+    }
+    InsertNewVideo(request, successVideoInsert, errorCB2);
 
-        }
+}
 
-        function successVideoInsert() {
-            alert("Video Insreted!")
-            window.location="Videos.html";
-        }
+function successVideoInsert() {
+    alert("Video Insreted!")
+    window.location = "Videos.html";
+}
 
 function GetVid() {
     var request = {
-         athleteID: localStorage.Id,
-     }
-  GetAthleteVideo(request, successGetVideo, errorCB2);
+        athleteID: localStorage.Id,
+    }
+    GetAthleteVideo(request, successGetVideo, errorCB2);
 
- }
+}
 
-        function successGetVideo(results) {
-            var userObj = JSON.parse(results.d);
-            for (var i = 0; i < userObj.length; i++) {
-                $("#tableBody").append(" \
+function successGetVideo(results) {
+    var userObj = JSON.parse(results.d);
+    for (var i = 0; i < userObj.length; i++) {
+        $("#tableBody").append(" \
         <tr> \
          <td>" + userObj[i].Descripition + "</td> \
           <td><a href=" + userObj[i].VideoURL + " target='blank'>Link</a></td> \
                 </tr> \
                             ");
-                
 
-            }
-            
-        }
+
+    }
+
+}
 
 
 function errorCB(e) {
@@ -616,3 +636,4 @@ function errorCB(e) {
 function errorCB2(e) {
     alert("I caught the exception : failed in AjaxArrFunc \n The exception message is : " + e.responseText);
 }
+
