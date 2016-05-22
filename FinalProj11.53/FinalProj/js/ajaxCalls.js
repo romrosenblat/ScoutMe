@@ -185,6 +185,22 @@ function InsertNewVideo(request, successVideoInsert, errorCB2) {
             }) // end of ajax call
 }
 
+function SearchAth(request, searchSuccess, errorCB) {
+
+    var dataString = JSON.stringify(request);
+
+    $.ajax({ // ajax call starts
+        url: 'WebService.asmx/SearchAthlete',   // server side web service method
+        data: dataString,                          // the parameters sent to the server
+        type: 'POST',                              // can be also GET
+        dataType: 'json',                          // expecting JSON datatype from the server
+        contentType: 'application/json; charset = utf-8', // sent to the server
+        success: searchSuccess,                // data.d id the Variable data contains the data we get from serverside
+        error: errorCB
+    }) // end of ajax call
+}
+
+
 
 function SendAthleteStats(requestDataString) {
     var dataObj = JSON.parse(requestDataString);
