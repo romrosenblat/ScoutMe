@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Web;
 
 /// <summary>
@@ -203,6 +204,57 @@ public class Athlete
         string[] arr = fullName.Split(' ');
 
         return arr;
+    }
+
+    public string[] SearchAthlete(string prefixText)
+    {
+        //ADO.Net
+        SqlConnection cn = new SqlConnection();
+        DataSet ds = new DataSet();
+        DataTable dt = new DataTable();
+        String strCn = "Data Source=media.ruppin.ac.il;Initial Catalog=bgroup33_prod;Persist Security Info=True;User ID=bgroup33;Password=bgroup33_99691";
+        cn.ConnectionString = strCn;
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = cn;
+        cmd.CommandType = CommandType.Text;
+        //Compare String From Textbox(prefixText) AND String From 
+        //Column in DataBase(CompanyName)
+        //If String from DataBase is equal to String from TextBox(prefixText) 
+        //then add it to return ItemList
+        //-----I defined a parameter instead of passing value directly to 
+        //prevent SQL injection--------//
+        cmd.CommandText = "select * from Athlete Where first_name like @myParameter";
+        cmd.Parameters.AddWithValue("@myParameter", "%" + prefixText + "%");
+
+        try
+        {
+            cn.Open();
+            cmd.ExecuteNonQuery();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(ds);
+        }
+        catch
+        {
+        }
+        finally
+        {
+            cn.Close();
+        }
+        dt = ds.Tables[0];
+
+        //Then return List of string(txtItems) as result
+        List<string> txtItems = new List<string>();
+        String dbValues;
+
+        foreach (DataRow row in dt.Rows)
+        {
+            //String From DataBase(dbValues)
+            dbValues = row["first_name"].ToString() +' '+ row["last_name"].ToString();
+            dbValues = dbValues.ToLower();
+            txtItems.Add(dbValues);
+        }
+
+        return txtItems.ToArray();
     }
 
 }

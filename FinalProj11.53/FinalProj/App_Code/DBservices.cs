@@ -219,7 +219,7 @@ public class DBservices
             try
             {
                 con.Open();
-                int returenCode = (int)cmd.ExecuteScalar();
+                int returenCode = cmd.ExecuteNonQuery();
                 string type = "";
                 switch (returenCode)
                 {
@@ -236,7 +236,7 @@ public class DBservices
                 }
                 return type;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return "No_User";
 
@@ -247,9 +247,9 @@ public class DBservices
             }
         }
     }
-    public List<int> spBasketBall_Stats(int athleteID)
+    public int spBasketBall_Stats(int athleteID)
     {
-        List<int> returenCode = null;
+        
         string cStr = WebConfigurationManager.ConnectionStrings["bgroup33_prodConnectionString"].ConnectionString;
         using (SqlConnection con = new SqlConnection(cStr))
         {
@@ -263,12 +263,14 @@ public class DBservices
             try
             {
                 con.Open();
-                returenCode = (List<int>)cmd.ExecuteScalar();
-                return returenCode;
-            }
-            catch (Exception)
-            {
 
+                int a = cmd.ExecuteNonQuery();
+                return a;
+            }
+            catch (Exception ex)
+            {
+                
+                return -1;
 
             }
             finally
@@ -277,7 +279,6 @@ public class DBservices
 
 
             }
-            return returenCode;
         }
     }
     public int sp_HandBall_Stats(int athleteID, bool isGoaley)
@@ -297,7 +298,7 @@ public class DBservices
             try
             {
                 con.Open();
-                int returenCode = (int)cmd.ExecuteScalar();
+                int returenCode = cmd.ExecuteNonQuery();
                 return returenCode;
             }
             catch (Exception)
@@ -328,7 +329,7 @@ public class DBservices
             try
             {
                 con.Open();
-                int returenCode = (int)cmd.ExecuteScalar();
+                int returenCode = cmd.ExecuteNonQuery();
                 return returenCode;
             }
             catch (Exception)
