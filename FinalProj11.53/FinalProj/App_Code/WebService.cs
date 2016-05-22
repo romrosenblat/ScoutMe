@@ -197,6 +197,18 @@ public class WebService : System.Web.Services.WebService
         string jsonString = js.Serialize(team.GetAllTeams());
         return jsonString;
     }
+
+
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    [WebMethod]
+    public string GetAllTeamsMinimized()
+    {
+        Teams team = new Teams();
+        JavaScriptSerializer js = new JavaScriptSerializer();
+        string jsonString = js.Serialize(team.GetAllTeamsMinimized());
+        return jsonString;
+    }
+
     [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
     [WebMethod]
     public int UpdateAthlete(int athleteID, string firstName, string lastNAme, decimal hight, decimal weight, string city, string phone
@@ -291,7 +303,7 @@ public class WebService : System.Web.Services.WebService
         return ath.SearchAthlete(prefixText);
     }
 
-    public int GetSoccertats(int id,bool isGoaley)
+    public int GetSoccertats(int id, bool isGoaley)
     {
         DBservices dbs = new DBservices();
         return dbs.spSoccer_Stats(id, isGoaley);
@@ -308,5 +320,67 @@ public class WebService : System.Web.Services.WebService
         return dbs.sp_HandBall_Stats(id, isGoaley);
     }
 
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    [WebMethod]
+    public int SetSoccerStats(int athleteID, DateTime Date, float Minutes, int vsTeam,
+        float Goals, float Assits, float TotalShots,
+        float Passes, float Saves_G, float ShotsOnTarget_G, float Goals_G, bool isGoaly)
+    {
+        return 1;
+    }
+
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    [WebMethod]
+    public int SetHandBallStats(int athleteID, DateTime Date, float Minutes, int vsTeam,string myTeamName,
+        float Goals, float Shots, float TwoMin, float SevenM_Goal,
+        float Saves_G, float Shots_G, bool isGoaly)
+    {
+        string vsTeamName = Teams.GetTeamById(vsTeam);
+        string athleteTeam = myTeamName;
+        string tempDesc = Date.ToShortDateString() + ", " + athleteTeam + " Vs. " + vsTeamName;
+        Game g = new Game()
+        {
+            AthleteID = athleteID,
+            Date = Date,
+            Minutes = new DateTime(2017, 1, 1, 0, (int)Minutes, 0),
+            Description = tempDesc,
+            SportId = 3
+
+        };
+        int gameId = g.InsertNewGame();
+
+        //int gameId = insert game get id
+        HandBall b = new HandBall()
+        {
+            GameId = gameId,
+            AthleteID = athleteID,
+            Date = Date,
+            Description = tempDesc,
+            Goals = Goals,
+            Minutes = new DateTime(2017, 1, 1, 0, (int)Minutes, 0),
+            RedCard = 0,
+            Saves_G = Saves_G,
+            SevenM_Goal = SevenM_Goal,
+            Shots = Shots,
+            Shots_G = Shots_G,
+            SportId = 3,
+            TwoMin = TwoMin,
+            YellowCard = 0
+        };
+        b.insertGameInfoSoccer(isGoaly);
+
+        return 1;
+    }
+
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    [WebMethod]
+    public int SetBasketBallStats(int athleteID, DateTime Date, float Minutes, int vsTeam,
+        float Points, float Assits, float Rebounds, float Blocks, float TO, float Fouls, float STL)
+    {
+        return 1;
+    }
+
 
 }
+
+

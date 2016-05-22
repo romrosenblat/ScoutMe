@@ -206,6 +206,21 @@ public class Athlete
         return arr;
     }
 
+    public static string GetAthleteTeamByAthleteId(int ahtleteId)
+    {
+        DBservices dbs = new DBservices();
+        dbs = dbs.ReadFromDataBaseCommand("SELECT [teamNum]  FROM [dbo].[Athlete] where  [athleteID]="+ ahtleteId.ToString());
+        string teamNumber = "0";
+        List<string> teamsList = new List<string>();
+        foreach (DataRow dr in dbs.dt.Rows)
+        {
+
+            teamNumber = dr["teamNum"].ToString();
+            
+        }
+        return teamNumber;
+    }
+
     public string[] SearchAthlete(string prefixText)
     {
         //ADO.Net

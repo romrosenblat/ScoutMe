@@ -12,14 +12,15 @@ public class HandBall: Game
     protected float saves_G;
     protected float shots_G;
 
-    public float Goals { get { return goals; } set { goals = value; } }
-    public float Shots { get { return shots; } set { shots = value; } }
-    public float TwoMin { get { return twoMin; } set { twoMin = value; } }
+    public float Goals       { get { return goals; } set { goals = value; } }
+    public float Shots       { get { return shots; } set { shots = value; } }
+    public float TwoMin         { get { return twoMin; } set { twoMin = value; } }
     public float SevenM_Goal { get { return sevenM_Goal; } set { sevenM_Goal = value; } }
-    public float Saves_G { get { return saves_G; } set { saves_G = value; } }
-    public float Shots_G { get { return shots_G; } set { shots_G = value; } }
+    public float Saves_G        { get { return saves_G; } set { saves_G = value; } }
+    public float Shots_G        { get { return shots_G; } set { shots_G = value; } }
     public HandBall()
     {
+        readHandBallDB();
         //
         // TODO: Add constructor logic here
         //
@@ -66,3 +67,4 @@ public class HandBall: Game
         dbs.Update(); // update the database
     }
 }
+

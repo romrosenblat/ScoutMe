@@ -88,14 +88,25 @@ function AgentAuthenticate(request, successAgentInfo, errorCB2) {
 }
 
 
+function GetAllTeamsMinimized(sucessCallback) {
+    $.ajax({ // ajax call starts
+        url: 'WebService.asmx/GetAllTeamsMinimized',        // server side web service method
+        type: 'POST',                              // can be also GET
+        dataType: 'json',                          // expecting JSON datatype from the server
+        contentType: 'application/json; charset = utf-8',
+        success: sucessCallback,                // data.d id the Variable data contains the data we get from serverside
+        error: errorCB
+    });
+}
 
-function GetTeam() {
+
+function GetTeam(sucessCallback) {
     $.ajax({ // ajax call starts
         url: 'WebService.asmx/GetAllTeams',        // server side web service method
         type: 'POST',                              // can be also GET
         dataType: 'json',                          // expecting JSON datatype from the server
         contentType: 'application/json; charset = utf-8',
-        success: successTeam,                // data.d id the Variable data contains the data we get from serverside
+        success: sucessCallback,                // data.d id the Variable data contains the data we get from serverside
         error: errorCB
     });
 }
@@ -202,17 +213,36 @@ function SearchAth(request, searchSuccess, errorCB) {
 
 
 
-function SendAthleteStats(requestDataString) {
-    var dataObj = JSON.parse(requestDataString);
+function SendAthleteStats(requestData, athleteType) {
+
+    var methodNamePerAthleteType = "";
+    switch (athleteType)
+    {
+        case AthleteSportType.Soccer:
+            methodNamePerAthleteType = "SetSoccerStats"
+            break;
+        case AthleteSportType.HandBall:
+            methodNamePerAthleteType = "SetHandBallStats"
+            break;
+        case AthleteSportType.BasketBall:
+            methodNamePerAthleteType = "SetBasketBallStats"
+            break;
+
+    }
+    var dataObj =JSON.stringify(requestData);
     
     $.ajax({ // ajax call starts
-        url: 'WebService.asmx/InsertNewVideo',   
-        data: dataString,                          
+        url: 'WebService.asmx/' + methodNamePerAthleteType,
+        data: dataObj,
         type: 'POST',                              
         dataType: 'json',                          
         contentType: 'application/json; charset = utf-8', 
         success: function(res){console.log(res)},                
-        error: function(err){console.log(err); alert(err);}
+        error: function (err)
+        {
+            console.log(err);
+            //alert(err);
+        }
     });
 
 }

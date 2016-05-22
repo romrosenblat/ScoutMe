@@ -13,13 +13,13 @@ public class BasketBall : Game
     protected float fouls;
     protected float stl;
 
-    public float Points { get { return points; } set { points = value; } }
-    public float Assits { get { return assists; } set { assists = value; } }
+    public float Points     { get { return points; } set { points = value; } }
+    public float Assits  { get { return assists; } set { assists = value; } }
     public float Rebounds { get { return rebounds; } set { rebounds = value; } }
-    public float Blocks { get { return blocks; } set { blocks = value; } }
-    public float TO { get { return _TO; } set { _TO = value; } }
-    public float Fouls { get { return fouls; } set { fouls = value; } }
-    public float STL { get { return stl; } set { stl = value; } }
+    public float Blocks  { get { return blocks; } set { blocks = value; } }
+    public float TO          { get { return _TO; } set { _TO = value; } }
+    public float Fouls   { get { return fouls; } set { fouls = value; } }
+    public float STL         { get { return stl; } set { stl = value; } }
     public BasketBall()
     {
         //
@@ -62,3 +62,4 @@ public class BasketBall : Game
         dbs.Update(); // update the database
     }
 }
+

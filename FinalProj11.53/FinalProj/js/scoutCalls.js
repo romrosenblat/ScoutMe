@@ -77,7 +77,15 @@ function s1(results) {
 
 function AthleteIsGoaly()
 {
+    if (typeof localStorage.isGolaey === 'undefined'
+        || localStorage.isGolaey == 'undefined'
+        || localStorage.isGolaey==null)
+        return false;
     return localStorage.isGolaey;
+}
+function GetAthleteId()
+{
+    return localStorage.Id;
 }
 
 
@@ -550,7 +558,7 @@ function successTeamReg() {
 
 }
 function listTeam() {
-    GetTeam(successTeam, errorCB);
+    GetTeam(successTeam);
 }
 
 function listAgent() {
@@ -637,3 +645,7 @@ function errorCB2(e) {
     alert("I caught the exception : failed in AjaxArrFunc \n The exception message is : " + e.responseText);
 }
 
+function GetMyTeamName()
+{
+    return localStorage.teamName;
+}

@@ -96,6 +96,18 @@ public class Teams
         dbs.Update(); // update the database
     }
 
+    internal static string GetTeamById(int TeamId)
+    {
+        DBservices dbs = new DBservices();
+        dbs = dbs.ReadFromDataBaseCommand("select team_name from Teams where teamNum="+ TeamId);
+        string teamName = "";
+        foreach (DataRow dr in dbs.dt.Rows)
+        {
+
+            teamName = dr["team_name"].ToString();
+        }
+        return teamName;
+    }
 
     public List<string> GetAllTeams()
     {
@@ -107,6 +119,22 @@ public class Teams
 
             string team = dr["team_name"].ToString();
             teamsList.Add(team);
+        }
+        return teamsList;
+    }
+
+    public List<Teams> GetAllTeamsMinimized()
+    {
+        DBservices dbs = new DBservices();
+        dbs = dbs.ReadFromDataBaseCommand("select teamNum ,team_name from Teams");
+        List<Teams> teamsList = new List<Teams>();
+        foreach (DataRow dr in dbs.dt.Rows)
+        {
+            teamsList.Add(new Teams()
+            {
+                TeamNumber = Convert.ToInt32(dr["teamNum"].ToString()),
+                Team_name = dr["team_name"].ToString()
+            });
         }
         return teamsList;
     }

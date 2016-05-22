@@ -35,4 +35,15 @@ public class Game
         YellowCard = yellowCard;
         Description = description;
     }
+
+    /// <summary>
+    /// inserts this game and retuns the game id
+    /// </summary>
+    /// <returns>game id</returns>
+    public int InsertNewGame()
+    {
+        //insert into games table
+        //return the id of the new game
+        return new Random().Next(1, 100);
+    }
 }
