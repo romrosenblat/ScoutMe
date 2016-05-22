@@ -20,8 +20,9 @@
     <link href="js/jquery-ui.css" rel="stylesheet" />
     <script src="js/jquery-ui.js"></script>
     <script src="js/jquery1.js"></script>
-    <a href="AthleteHandler.ashx">AthleteHandler.ashx</a>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <link href="css/athcss.css" rel="stylesheet" />
@@ -29,9 +30,6 @@
         $(document).ready(function () {
             writeAthlete()
 
-            $('#search').autocomplete({
-                source:'AthleteHandler.ashx'
-            });
                 
 
             $("#athEditBTN").click(function () {
@@ -42,6 +40,26 @@
                 window.location = "Videos.html";
             });
         });
+
+        $("#searchAth").autocomplete({
+            source: searchAth()
+        });
+        function searchAth() {
+            var prefix = document.getElementById("searchAth").value;
+            // create a json request
+            var request = {
+                prefix: prefix
+            }
+
+            // activate the ajax function
+            SearchAth(request, searchSuccess, errorCB);
+        }
+
+        function searchSuccess(resutls) {
+            people = $.parseJSON(resutls.d);
+
+            document.getElementById("resultsDiv").innerHTML = str;
+        }
     </script>
 </head>
 <body>
@@ -84,7 +102,8 @@
                     <td><span class="label label-default" id="TopAtName">  </span></td>
                    <td>
                        <div class="ui-widget">
-                           <input id="search"/>
+                           <label for="searchAth">Name: </label>
+                           <input id="searchAth">
                        </div>
                    </td>
                 </tr>

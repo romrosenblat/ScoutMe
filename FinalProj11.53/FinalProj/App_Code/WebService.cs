@@ -285,5 +285,28 @@ public class WebService : System.Web.Services.WebService
 
     }
 
+    public string[] SearchAthlete(string prefixText)
+    {
+        Athlete ath = new Athlete();
+        return ath.SearchAthlete(prefixText);
+    }
+
+    public int GetSoccertats(int id,bool isGoaley)
+    {
+        DBservices dbs = new DBservices();
+        return dbs.spSoccer_Stats(id, isGoaley);
+    }
+
+    public int GetBasketBallStats(int id)
+    {
+        DBservices dbs = new DBservices();
+        return dbs.spBasketBall_Stats(id);
+    }
+    public int GetHandBallStats(int id, bool isGoaley)
+    {
+        DBservices dbs = new DBservices();
+        return dbs.sp_HandBall_Stats(id, isGoaley);
+    }
+
 
 }

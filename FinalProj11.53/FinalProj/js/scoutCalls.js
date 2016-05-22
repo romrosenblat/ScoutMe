@@ -616,3 +616,4 @@ function errorCB(e) {
 function errorCB2(e) {
     alert("I caught the exception : failed in AjaxArrFunc \n The exception message is : " + e.responseText);
 }
+
