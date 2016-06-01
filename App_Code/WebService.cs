@@ -384,6 +384,16 @@ public class WebService : System.Web.Services.WebService
         return 1;
     }
 
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    [WebMethod]
+    public string AdvanceSearch(decimal hightMax,decimal hightMin,decimal weightMin,decimal wegithMax,string sex,int sportID)
+    {
+        Athlete ath = new Athlete();
+        JavaScriptSerializer js = new JavaScriptSerializer();
+        string result = js.Serialize(ath.AdvanceSerch(hightMax,hightMin,weightMin,wegithMax,sex,sportID));
+        return result;
+    }
+
 
 }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Script.Serialization;
 
 /// <summary>
@@ -287,6 +288,139 @@ public class Athlete
         return txtItems;
     }
 
+    public List<Athlete> AdvanceSerch(decimal hightMax, decimal hightMin, decimal weightMin, decimal weightMax, string sex, int sportID)
+    {
+        DataSet ds = new DataSet();
+        DataTable dt = new DataTable();
 
-    
+        string cStr = WebConfigurationManager.ConnectionStrings["bgroup33_prodConnectionString"].ConnectionString;
+        using (SqlConnection con = new SqlConnection(cStr))
+        {
+            SqlCommand cmd = new SqlCommand("sp_Adcance_Search", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter paramweightMin = new SqlParameter();
+            paramweightMin.ParameterName = "@weight_start";
+            paramweightMin.SqlDbType = SqlDbType.Decimal;
+            paramweightMin.Direction = ParameterDirection.Input;
+            paramweightMin.Value = weightMin;
+
+            SqlParameter paramweightMax = new SqlParameter();
+            paramweightMax.ParameterName = "@weight_end";
+            paramweightMax.SqlDbType = SqlDbType.Decimal;
+            paramweightMax.Direction = ParameterDirection.Input;
+            paramweightMax.Value = weightMax;
+
+            SqlParameter paramhightMax = new SqlParameter();
+            paramhightMax.ParameterName = "@hight_end";
+            paramhightMax.SqlDbType = SqlDbType.Decimal;
+            paramhightMax.Direction = ParameterDirection.Input;
+            paramhightMax.Value = hightMax;
+
+            SqlParameter paramhightMin = new SqlParameter();
+            paramhightMin.ParameterName = "@hight_start";
+            paramhightMin.SqlDbType = SqlDbType.Decimal;
+            paramhightMin.Direction = ParameterDirection.Input;
+            paramhightMin.Value = hightMin;
+
+            SqlParameter paramSex = new SqlParameter();
+            paramSex.ParameterName = "@sex";
+            paramSex.SqlDbType = SqlDbType.NVarChar;
+            paramSex.Direction = ParameterDirection.Input;
+            paramSex.Value = sex;
+
+            SqlParameter paramSport = new SqlParameter();
+            paramSport.ParameterName = "@sportType";
+            paramSport.SqlDbType = SqlDbType.NVarChar;
+            paramSport.Direction = ParameterDirection.Input;
+            paramSport.Value = sportID;
+            //SqlParameter paramweightMin = new SqlParameter("@weight_start", weightMin);
+            //SqlParameter paramweightMax = new SqlParameter("@weight_end", weightMax);
+            //SqlParameter paramhightMax = new SqlParameter("@hight_start", hightMax);
+            //SqlParameter paramhightMin = new SqlParameter("@hight_end", hightMin);
+            //SqlParameter paramSex = new SqlParameter("@sex", sex);
+            //SqlParameter paramSport = new SqlParameter("@sportType", sportID);
+
+
+            cmd.Parameters.Add(paramweightMin);
+            cmd.Parameters.Add(paramweightMax);
+            cmd.Parameters.Add(paramhightMax);
+            cmd.Parameters.Add(paramhightMin);
+            cmd.Parameters.Add(paramSex);
+            cmd.Parameters.Add(paramSport);
+            List<Athlete> txtItems = new List<Athlete>();
+
+            try
+            {
+                con.Open();
+                using (SqlDataReader dataReader = cmd.ExecuteReader())
+                {
+                    
+                        Athlete ath = new Athlete();
+                        ath.id = dataReader.GetInt32(0);
+                        //ath.first_name = row["first_name"].ToString();
+                        //ath.last_name = row["last_name"].ToString();
+                        //ath.sportID = int.Parse(row["sportID"].ToString());
+                        //ath.dob = (DateTime)row["date_of_birth"];
+                        //ath.phone = row["phone"].ToString();
+                        //ath.eMail = row["eMail"].ToString();
+                        //ath.hight = (decimal)(row["hight"]);
+                        //ath.weight = (decimal)row["weight"];
+                        //ath.city = row["city"].ToString();
+                        //ath.agentName = row["agentName"].ToString();
+                        //ath.teamName = row["teamName"].ToString();
+                        //ath.isGoaley = (bool)row["isGoaley"];
+                        //ath.sex = row["sex"].ToString();
+                        //ath.password = row["password"].ToString();
+                        //txtItems.Add(ath);
+
+                    
+                }
+                //SqlDataAdapter da = new SqlDataAdapter(cmd);
+                //da.Fill(ds);
+
+            }
+            catch (Exception ex)
+            {
+
+
+            }
+            finally
+            {
+                con.Close();
+                }
+            //dt = ds.Tables[0];
+
+            //Then return List of string(txtItems) as result
+            //List<Athlete> txtItems = new List<Athlete>();
+            
+            foreach (DataRow row in dt.Rows)
+            {
+                //String From DataBase(dbValues)
+                Athlete ath = new Athlete();
+                ath.id = int.Parse(row["athleteID"].ToString());
+                ath.first_name = row["first_name"].ToString();
+                ath.last_name = row["last_name"].ToString();
+                ath.sportID = int.Parse(row["sportID"].ToString());
+                ath.dob = (DateTime)row["date_of_birth"];
+                ath.phone = row["phone"].ToString();
+                ath.eMail = row["eMail"].ToString();
+                ath.hight = (decimal)(row["hight"]);
+                ath.weight = (decimal)row["weight"];
+                ath.city = row["city"].ToString();
+                ath.agentName = row["agentName"].ToString();
+                ath.teamName = row["teamName"].ToString();
+                ath.isGoaley = (bool)row["isGoaley"];
+                ath.sex = row["sex"].ToString();
+                ath.password = row["password"].ToString();
+                txtItems.Add(ath);
+            }
+            return txtItems;
+        }
+
+        
+    }
+
+
+
 }
