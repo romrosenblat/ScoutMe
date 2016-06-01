@@ -247,6 +247,3 @@ function SendAthleteStats(requestData, athleteType) {
 
 }
 
-
-
-

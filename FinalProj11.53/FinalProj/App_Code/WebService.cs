@@ -300,7 +300,9 @@ public class WebService : System.Web.Services.WebService
     public string[] SearchAthlete(string prefixText)
     {
         Athlete ath = new Athlete();
-        return ath.SearchAthlete(prefixText);
+        //TODO: OREN FIX THIS
+        //return ath.SearchAthlete(prefixText);
+        return null;
     }
 
     public int GetSoccertats(int id, bool isGoaley)
@@ -342,7 +344,7 @@ public class WebService : System.Web.Services.WebService
         {
             AthleteID = athleteID,
             Date = Date,
-            Minutes = new DateTime(2017, 1, 1, 0, (int)Minutes, 0),
+            Minutes = (int)Minutes,
             Description = tempDesc,
             SportId = 3
 
@@ -357,7 +359,7 @@ public class WebService : System.Web.Services.WebService
             Date = Date,
             Description = tempDesc,
             Goals = Goals,
-            Minutes = new DateTime(2017, 1, 1, 0, (int)Minutes, 0),
+            Minutes = (int)Minutes,
             RedCard = 0,
             Saves_G = Saves_G,
             SevenM_Goal = SevenM_Goal,
@@ -380,6 +382,7 @@ public class WebService : System.Web.Services.WebService
         return 1;
     }
 
+  
 
 }
 

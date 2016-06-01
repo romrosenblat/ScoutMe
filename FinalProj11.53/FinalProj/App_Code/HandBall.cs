@@ -1,9 +1,11 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Web;
 /// <summary>
 /// Summary description for HandBall
 /// </summary>
-public class HandBall: Game
+public class HandBall : Game
 {
     protected float goals;
     protected float shots;
@@ -12,27 +14,44 @@ public class HandBall: Game
     protected float saves_G;
     protected float shots_G;
 
-    public float Goals       { get { return goals; } set { goals = value; } }
-    public float Shots       { get { return shots; } set { shots = value; } }
-    public float TwoMin         { get { return twoMin; } set { twoMin = value; } }
+    public float Goals { get { return goals; } set { goals = value; } }
+    public float Shots { get { return shots; } set { shots = value; } }
+    public float TwoMin { get { return twoMin; } set { twoMin = value; } }
     public float SevenM_Goal { get { return sevenM_Goal; } set { sevenM_Goal = value; } }
-    public float Saves_G        { get { return saves_G; } set { saves_G = value; } }
-    public float Shots_G        { get { return shots_G; } set { shots_G = value; } }
+    public float Saves_G { get { return saves_G; } set { saves_G = value; } }
+    public float Shots_G { get { return shots_G; } set { shots_G = value; } }
     public HandBall()
     {
-        readHandBallDB();
-        //
-        // TODO: Add constructor logic here
-        //
     }
-    public DataTable readHandBallDB()
+
+    public List<HandBall> GetStatsForAthlere(int athleteID)
     {
-        // create a new DBServices Object
         DBservices dbs = new DBservices();
-        dbs = dbs.ReadFromDataBase("bgroup33_prodConnectionString", "Game_HandBall");
-        // save the dataset in a session object
-        HttpContext.Current.Session["userDataSet"] = dbs;
-        return dbs.dt;
+        dbs = dbs.ReadFromDataBaseCommand("select * from [dbo].[Game_HandBall] where [athleteID]= " + athleteID);
+        List<HandBall> players = new List<HandBall>();
+
+        foreach (DataRow dr in dbs.dt.Rows)
+        {
+            HandBall player = new HandBall();
+            try
+            {
+                player.athleteID = athleteID;
+                player.date = Convert.ToDateTime(dr["date"]);
+                player.goals = Convert.ToInt32(dr["goals"]);
+                player.shots= Convert.ToInt32(dr["shots"]);
+                player.twoMin= Convert.ToInt32(dr["2_Min"]);
+
+
+            }
+            catch (Exception ex)
+            {
+                //TODO - problem in the query or one of the retuned values             
+            }
+            players.Add(player);
+        }
+
+
+        return players;
     }
 
     public void insertGameInfoSoccer(bool isGoaley)

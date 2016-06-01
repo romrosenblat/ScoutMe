@@ -346,7 +346,7 @@ public class WebService : System.Web.Services.WebService
         {
             AthleteID = athleteID,
             Date = Date,
-            Minutes = new DateTime(2017, 1, 1, 0, (int)Minutes, 0),
+            Minutes =(int)Minutes,
             Description = tempDesc,
             SportId = 3
 
@@ -361,7 +361,7 @@ public class WebService : System.Web.Services.WebService
             Date = Date,
             Description = tempDesc,
             Goals = Goals,
-            Minutes = new DateTime(2017, 1, 1, 0, (int)Minutes, 0),
+            Minutes = (int)Minutes,
             RedCard = 0,
             Saves_G = Saves_G,
             SevenM_Goal = SevenM_Goal,
@@ -392,6 +392,30 @@ public class WebService : System.Web.Services.WebService
         JavaScriptSerializer js = new JavaScriptSerializer();
         string result = js.Serialize(ath.AdvanceSerch(hightMax,hightMin,weightMin,wegithMax,sex,sportID));
         return result;
+    }
+
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    [WebMethod]
+    public List<HandBall> GetHBStats(int athleteID)
+    {
+        return HandBall.GetStatsForAthlere(athleteID);
+    }
+
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    [WebMethod]
+    public List<Soccer> GetSoStats(int athleteID)
+    {
+        //return HandBall.GetStatsForAthlere(athleteID);
+        return null;
+    }
+
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    [WebMethod]
+    public List<BasketBall> GetBBStats(int athleteID)
+    {
+        //return HandBall.GetStatsForAthlere(athleteID);
+        return null;
+
     }
 
 

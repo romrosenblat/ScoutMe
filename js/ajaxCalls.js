@@ -250,3 +250,52 @@ function SendAthleteStats(requestData, athleteType) {
 
 
 
+function GetHanballStatsResult(athleteId, callBack) {
+    GetStatsResult(athleteId,AthleteSportType.HandBall, callBack)
+}
+
+function GetBasketballStatsResult(athleteId, callBack) {
+    GetStatsResult(athleteId,AthleteSportType.BasketBall, callBack)
+}
+
+function GetSoccerStatsResult(athleteId, callBack) {
+    GetStatsResult(athleteId,AthleteSportType.Soccer, callBack)
+}
+
+
+function GetStatsResult(athleteId, athleteType, callBack) {
+    var methodNamePerAthleteType = "";
+    switch (athleteType) {
+        case AthleteSportType.Soccer:
+            methodNamePerAthleteType = "GetSoStats"
+            break;
+        case AthleteSportType.HandBall:
+            methodNamePerAthleteType = "GetHBStats"
+            break;
+        case AthleteSportType.BasketBall:
+            methodNamePerAthleteType = "GetBBStats"
+            break;
+
+    }
+    var dataObj = JSON.stringify({ athleteID: athleteId });
+
+
+    $.ajax({ // ajax call starts
+        url: 'WebService.asmx/' + methodNamePerAthleteType,
+        type: 'POST',
+        data: dataObj,
+
+        dataType: 'json',
+        contentType: 'application/json; charset = utf-8',
+        success: function (res) {
+            callBack(res); console.log(res)
+        },
+        error: function (err) {
+            console.log(err);
+            //alert(err);
+        }
+    });
+
+}
+
+

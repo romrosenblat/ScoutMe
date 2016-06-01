@@ -9,7 +9,7 @@ public class Game
     protected int athleteID;
     protected int sportId;
     protected DateTime date;
-    protected DateTime minutes;
+    protected int minutes;
     protected int redCard;
     protected int yellowCard;
     protected string description;
@@ -18,7 +18,7 @@ public class Game
     public int AthleteID { get { return athleteID; } set { athleteID = value; } }
     public int SportId { get { return sportId; } set { sportId = value; } }
     public DateTime Date { get { return date; } set { date = value; } }
-    public DateTime Minutes { get { return minutes; } set { minutes = value; } }
+    public int Minutes { get { return minutes; } set { minutes = value; } }
     public int RedCard { get { return redCard; } set { redCard = value; } }
     public int YellowCard { get { return yellowCard; } set { yellowCard = value; } }
     public string Description { get { return description; } set { description = value; } }

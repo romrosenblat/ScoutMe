@@ -96,7 +96,7 @@ public class Teams
         dbs.Update(); // update the database
     }
 
-    internal static string GetTeamById(int TeamId)
+    public static string GetTeamById(int TeamId)
     {
         DBservices dbs = new DBservices();
         dbs = dbs.ReadFromDataBaseCommand("select team_name from Teams where teamNum="+ TeamId);

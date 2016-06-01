@@ -26,22 +26,11 @@ public class Soccer : Game
         
     }
 
-    public DataTable readSoccerDB()
-    {
-        // create a new DBServices Object
-        DBservices dbs = new DBservices();
-        dbs = dbs.ReadFromDataBase("bgroup33_prodConnectionString", "Game_Soccer");
-        // save the dataset in a session object
-        HttpContext.Current.Session["userDataSet"] = dbs;
-        return dbs.dt;
-    }
-
     public void insertGameInfoSoccer(bool isGoaley)
     {
 
-        if (HttpContext.Current.Session["userDataSet"] == null) return;
-
-        DBservices dbs = (DBservices)HttpContext.Current.Session["userDataSet"];
+        DBservices dbs = new DBservices();
+        dbs = dbs.ReadFromDataBase("bgroup33_prodConnectionString", "Game_Soccer");
 
         DataRow dr = dbs.dt.NewRow();
         dr["athleteID"] = athleteID;

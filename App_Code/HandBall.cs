@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Web;
 /// <summary>
 /// Summary description for HandBall
@@ -20,27 +22,44 @@ public class HandBall: Game
     public float Shots_G        { get { return shots_G; } set { shots_G = value; } }
     public HandBall()
     {
-        readHandBallDB();
-        //
-        // TODO: Add constructor logic here
-        //
+      
     }
-    public DataTable readHandBallDB()
+
+    public static List<HandBall> GetStatsForAthlere(int athleteID)
     {
-        // create a new DBServices Object
         DBservices dbs = new DBservices();
-        dbs = dbs.ReadFromDataBase("bgroup33_prodConnectionString", "Game_HandBall");
-        // save the dataset in a session object
-        HttpContext.Current.Session["userDataSet"] = dbs;
-        return dbs.dt;
+        dbs = dbs.ReadFromDataBaseCommand("select * from [dbo].[Game_HandBall] where [athleteID]= " + athleteID);
+        List<HandBall> players = new List<HandBall>();
+
+        foreach (DataRow dr in dbs.dt.Rows)
+        {
+            HandBall player = new HandBall();
+            try
+            {
+                player.athleteID = athleteID;
+                player.date = Convert.ToDateTime(dr["date"]);
+                player.goals = Convert.ToInt32(dr["goals"]);
+                player.shots = Convert.ToInt32(dr["shots"]);
+                player.twoMin = Convert.ToInt32(dr["2_Min"]);
+                player.sevenM_Goal= Convert.ToInt32(dr["7M_Goal"]);
+
+            }
+            catch (Exception ex)
+            {
+                //TODO - problem in the query or one of the retuned values             
+            }
+            players.Add(player);
+        }
+
+
+        return players;
     }
+
 
     public void insertGameInfoSoccer(bool isGoaley)
     {
-
-        if (HttpContext.Current.Session["userDataSet"] == null) return;
-
-        DBservices dbs = (DBservices)HttpContext.Current.Session["userDataSet"];
+        DBservices dbs = new DBservices();
+        dbs = dbs.ReadFromDataBase("bgroup33_prodConnectionString", "Game_HandBall");
 
         DataRow dr = dbs.dt.NewRow();
         dr["athleteID"] = athleteID;

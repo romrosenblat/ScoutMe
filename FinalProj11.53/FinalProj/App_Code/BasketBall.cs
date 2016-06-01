@@ -26,22 +26,12 @@ public class BasketBall : Game
         // TODO: Add constructor logic here
         //
     }
-    public DataTable readBasketBallDB()
-    {
-        // create a new DBServices Object
-        DBservices dbs = new DBservices();
-        dbs = dbs.ReadFromDataBase("bgroup33_prodConnectionString", "Game_BasketBall");
-        // save the dataset in a session object
-        HttpContext.Current.Session["userDataSet"] = dbs;
-        return dbs.dt;
-    }
 
     public void insertGameInfoBasketBall()
     {
 
-        if (HttpContext.Current.Session["userDataSet"] == null) return;
-
-        DBservices dbs = (DBservices)HttpContext.Current.Session["userDataSet"];
+        DBservices dbs = new DBservices();
+        dbs = dbs.ReadFromDataBase("bgroup33_prodConnectionString", "Game_BasketBall");
 
         DataRow dr = dbs.dt.NewRow();
         dr["athleteID"] = athleteID;
