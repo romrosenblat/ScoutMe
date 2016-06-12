@@ -14,6 +14,9 @@
     <script src='http://davidstutz.github.io/bootstrap-multiselect/js/bootstrap-multiselect.js' type='text/javascript'></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <link rel="stylesheet" href="/resources/demos/style.css">
     <link href="css/bootstrap.css" rel="stylesheet" />
@@ -41,7 +44,8 @@
       }
 
       });
-
+      $("#hightAmount").val("cm " + $("#slider-hight").slider("values", 0) +
+     " - cm " + $("#slider-hight").slider("values", 1));
       $("#slider-weight").slider({
           range: true,
           min: 0,
@@ -55,26 +59,155 @@
               hightMaximun = ui.values[1];
           }
       });
-      $("#hightAmount").val("cm " + $("#slider-hight").slider("values", 0) +
-      " - cm " + $("#slider-hight").slider("values", 1));
+     
       $("#weightAmount").val("kg " + $("#slider-weight").slider("values", 0) +
 " - kg " + $("#slider-weight").slider("values", 1));
+
+      $("#slider-goles_handBall").slider({//goles slider handBall
+          range: true,
+          min: 0,
+          max: 500,
+          values: [1, 55],
+          slide: function (event, ui) {
+              $("#golesAmount_handBall").val(ui.values[0] + ui.values[1]);
+          },
+          stop: function (event, ui) {
+              golesMinmum = ui.values[0];
+              golesMaximun = ui.values[1];
+          }
+      });
+
+      $("#golesAmount_handBall").val($("#slider-goles_handBall").slider("values", 0) +
+     $("#slider-goles_handBall").slider("values", 1));
+
+      $("#slider-goales_soccer").slider({//goles slider soccer
+          range: true,
+          min: 0,
+          max: 500,
+          values: [1, 55],
+          slide: function (event, ui) {
+              $("#goalesAmount_soccer").val(ui.values[0] + ui.values[1]);
+          },
+          stop: function (event, ui) {
+              golesMinmum = ui.values[0];
+              golesMaximun = ui.values[1];
+          }
+      });
+
+      $("#goalesAmount_soccer").val($("#slider-goales_soccer").slider("values", 0) +
+     $("#slider-goales_soccer").slider("values", 1));
+
+      $("#slider-shots").slider({//shots slider
+          range: true,
+          min: 0,
+          max: 500,
+          values: [1, 55],
+          slide: function (event, ui) {
+              $("#shotsAmount").val( ui.values[0] + ui.values[1]);
+          },
+          stop: function (event, ui) {
+              shotsMinmum = ui.values[0];
+              shotsMaximun = ui.values[1];
+          }
+      });
+
+      $("#shotsAmount").val( $("#slider-shots").slider("values", 0) +
+     $("#slider-shots").slider("values", 1));
+
+      $("#slider-points").slider({//points slider
+          range: true,
+          min: 0,
+          max: 500,
+          values: [10, 120],
+          slide: function (event, ui) {
+              $("#pointsAmount").val(ui.values[0] + ui.values[1]);
+          },
+          stop: function (event, ui) {
+              pointsMinmum = ui.values[0];
+              pointsMaximun = ui.values[1];
+          }
+      });
+
+      $("#pointsAmount").val($("#slider-points").slider("values", 0) +
+     $("#slider-points").slider("values", 1));
+
+      $("#slider-assits_basketBall").slider({//assits slider basketBall
+          range: true,
+          min: 0,
+          max: 500,
+          values: [1, 55],
+          slide: function (event, ui) {
+              $("#assitsAmount_basketBall").val(ui.values[0] + ui.values[1]);
+          },
+          stop: function (event, ui) {
+              assitsMinmum = ui.values[0];
+              assitsMaximun = ui.values[1];
+          }
+      });
+
+      $("#assitsAmount_basketBall").val($("#slider-assits_basketBall").slider("values", 0) +
+     $("#slider-assits_basketBall").slider("values", 1));
+
+      $("#slider-assits_soccer").slider({//assits slider soccer
+          range: true,
+          min: 0,
+          max: 500,
+          values: [1, 55],
+          slide: function (event, ui) {
+              $("#assitsAmount_soccer").val(ui.values[0] + ui.values[1]);
+          },
+          stop: function (event, ui) {
+              assitsMinmum = ui.values[0];
+              assitsMaximun = ui.values[1];
+          }
+      });
+
+      $("#assitsAmount_soccer").val($("#slider-assits_soccer").slider("values", 0) +
+     $("#slider-assits_soccer").slider("values", 1));
+
+      $("#slider-rebound").slider({//rebound slider
+          range: true,
+          min: 0,
+          max: 500,
+          values: [1, 55],
+          slide: function (event, ui) {
+              $("#reboundAmount").val(ui.values[0] + ui.values[1]);
+          },
+          stop: function (event, ui) {
+              reboundMinmum = ui.values[0];
+              reboundMaximun = ui.values[1];
+          }
+      });
+
+      $("#reboundAmount").val($("#slider-rebound").slider("values", 0) +
+     $("#slider-rebound").slider("values", 1));
       
   });
   $(document).ready(function () {
-      $("#click").click(function () {
-          branch = document.getElementById("branch").value;
-          switch (branch) {
-              case 'Basketball':
-                  sportType = 2;
-                  break;
-              case 'Handball':
-                  sportType = 3;
-                  break;
-              case 'Soccer':
-                  sportType = 1;
-                  break;
+      $('#handDiv').hide();
+      $('#basketBallDiv').hide();
+      $('#soccerDiv').hide();
+
+      $('input[type=radio][name=options]').change(function () {
+          if (this.value == 'Soccer') {
+              $('#handDiv').hide();
+              $('#soccerDiv').show();
+              $('#basketBallDiv').hide();
           }
+          else if (this.value == 'BasketBall') {
+              $('#handDiv').hide();
+              $('#soccerDiv').hide();
+              $('#basketBallDiv').show();
+          }
+          else if (this.value == 'HandBall') {
+              $('#handDiv').show();
+              $('#soccerDiv').hide();
+              $('#basketBallDiv').hide();
+          }
+      });
+
+      $("#click_handBall").click(function () {//when handBall form submitted
+          $("#listAth").empty();
           if (document.getElementById("sex").checked == false) {
               athSex = "male";
           }
@@ -87,103 +220,265 @@
               weightMin: weightMinmum,
               wegithMax: weightMaximum,
               sex: athSex,
-              sportID: sportType
+              _goalsMin: golesMinmum,
+              _goalsMax: golesMaximun,
+              _shotsMin: shotsMinmum,
+              _shotsMax: shotsMaximun
           }
 
-          AdvanceSearch(request, advanceSearchSuccess, erorrCB);
+          AdvanceSearchHandBall(request, AdvanceSearchHandBallSuccess, erorrCB);
       })
-      
-    
 
-      
+      $("#click_soccer").click(function () {//when soccer form submitted
+          $("#listAth").empty();
+          if (document.getElementById("sex").checked == false) {
+              athSex = "male";
+          }
+          else {
+              athSex = "female";
+          };
+          var request = {
+              hightMax: hightMaximun,
+              hightMin: hightMinmum,
+              weightMin: weightMinmum,
+              wegithMax: weightMaximum,
+              sex: athSex,
+              _goalsMin: golesMinmum,
+              _goalsMax: golesMaximun,
+              _assitsMin: assitsMinmum,
+              _assitsMax: assitsMaximun
+          }
+
+          AdvanceSearchSoccer(request, AdvanceSearchSoccerSuccess, erorrCB);
+      })
+
+        $("#click_soccer").click(function () {//when soccer form submitted
+      $("#listAth").empty();
+      if (document.getElementById("sex").checked == false) {
+          athSex = "male";
+      }
+      else {
+          athSex = "female";
+      };
+      var request = {
+          hightMax: hightMaximun,
+          hightMin: hightMinmum,
+          weightMin: weightMinmum,
+          wegithMax: weightMaximum,
+          sex: athSex,
+          _goalsMin: golesMinmum,
+          _goalsMax: golesMaximun,
+          _assitsMin: assitsMinmum,
+          _assitsMax: assitsMaximun
+      }
+
+      AdvanceSearchSoccer(request, AdvanceSearchSoccerSuccess, erorrCB);
+  })     
   });
 
-  function AdvanceSearch(request, advanceSearchSuccess, erorrCB) {
+  function AdvanceSearchHandBall(request, AdvanceSearchHandBallSuccess, erorrCB) {
 
       var dataString = JSON.stringify(request);
 
       $.ajax({ // ajax call starts
-          url: 'WebService.asmx/AdvanceSearch',   // server side web service method
+          url: 'WebService.asmx/AdvanceSearch_HandBall',   // server side web service method
           data: dataString,                          // the parameters sent to the server
           type: 'POST',                              // can be also GET
           dataType: 'json',                          // expecting JSON datatype from the server
           contentType: 'application/json; charset = utf-8', // sent to the server
-          success: advanceSearchSuccess,                // data.d id the Variable data contains the data we get from serverside
+          success: AdvanceSearchHandBallSuccess,                // data.d id the Variable data contains the data we get from serverside
           error: erorrCB
       }) // end of ajax call
   }
 
-  function advanceSearchSuccess() {
-      alert("good!");
+  function AdvanceSearchHandBallSuccess(data) {
+      if (data !="") {
+          var athleteArr = JSON.parse(data.d);
+          for (var i = 0; i < athleteArr.length; i++) {
+              $("#listAth").append('<a href="#" class="list-group-item">' + athleteArr[i].first_name + ' ' + athleteArr[i].last_name + '</a>');
+          }
+      }
+  }
+ 
+  function AdvanceSearchSoccer(request, AdvanceSearchSoccerSuccess, erorrCB) {
+
+      var dataString = JSON.stringify(request);
+
+      $.ajax({ // ajax call starts
+          url: 'WebService.asmx/AdvanceSearch_Soccer',   // server side web service method
+          data: dataString,                          // the parameters sent to the server
+          type: 'POST',                              // can be also GET
+          dataType: 'json',                          // expecting JSON datatype from the server
+          contentType: 'application/json; charset = utf-8', // sent to the server
+          success: AdvanceSearchSoccerSuccess,                // data.d id the Variable data contains the data we get from serverside
+          error: erorrCB
+      }) // end of ajax call
+  }
+
+  function AdvanceSearchSoccerSuccess(data) {
+      if (data !="") {
+          var athleteArr = JSON.parse(data.d);
+          for (var i = 0; i < athleteArr.length; i++) {
+              $("#listAth").append('<a href="#" class="list-group-item">' + athleteArr[i].first_name + ' ' + athleteArr[i].last_name + '</a>');
+          }
+      }
   }
 
   function erorrCB() {
       alert("bad");
   }
-    
+
+
+
   
     </script>
 </head>
 <body>
-    <table>
-        <tr>
-            <td>
-                <p>
-                    <label for="amount">Hight range:</label>
-                    <input type="text" id="hightAmount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                    <div id="slider-hight"></div>
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <p>
-                    <label for="amount">Weigth range:</label>
-                    <input type="text" id="weightAmount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                </p>
-                <div id="slider-weight"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class='col-md-8'>
-                    <div class='form-group internal input-group'>
-                        <select class='form-control' id='branch'>
-                            <option value="Basketball">Basketball</option>
-                            <option value="Handball">Handball</option>
-                            <option value="Soccer">Soccer</option>
-                        </select>
-                    </div>
-                </div>
-            </td>
-        </tr>'=
-        <tr>
-            <td>
-                <div class='form-group'>
-                    <label class='control-label col-md-2 col-md-offset-2'>Gender</label>
-                    <div class='col-md-8'>
-                        <div class='make-switch' data-off-label='Male' data-on-label='Female'>
-                            <input id='sex' type='checkbox' value='isFemale'>
+    <div class="col-md-8">
+        <div class="btn-group" data-toggle="buttons">
+            <!--<label class="btn btn-primary active">-->
+                <input type="radio" name="options" id="soccerBTN" value="Soccer" checked>Soccer
+            <!--</label>-->
+            <!--<label class="btn btn-primary">-->
+                <input type="radio" name="options" id="basketBTN" value="BasketBall">BasketBall
+            <!--</label>-->
+            <!--<label class="btn btn-primary">-->
+                <input type="radio" name="options" id="handBTN" value="HandBall">HandBall
+            <!--</label>-->
+        </div>
+        <table>
+            <tr>
+                <td>
+                    <p>
+                        <label for="amount">Hight range:</label>
+                        <input type="text" id="hightAmount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                        <div id="slider-hight"></div>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <label for="amount">Weigth range:</label>
+                        <input type="text" id="weightAmount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                    </p>
+                    <div id="slider-weight"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class='form-group'>
+                        <label class='control-label col-md-2 col-md-offset-2'>Gender</label>
+                        <div class='col-md-8'>
+                            <div class='make-switch' data-off-label='Male' data-on-label='Female'>
+                                <input id='sex' type='checkbox' value='isFemale'>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
+                </td>
+            </tr>
+            </table>
+</div>
+    
+    <div id="handDiv"><!--HandBAll sliders-->
+           <table>
+            <tr>
+                <td>
+                    <p>
+                        <label for="amount">Goals range:</label>
+                        <input type="text" id="golesAmount_handBall" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                    </p>
+                    <div id="slider-goles_handBall"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <label for="amount">Shots range:</label>
+                        <input type="text" id="shotsAmount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                    </p>
+                    <div id="slider-shots"></div>
+                </td>
+            </tr>
+               <tr>
+                   <td>
+                       <button id="click_handBall">Submit</button>
+                   </td>
+               </tr>
+        </table>
+
+    </div>
+    <div id="basketBallDiv"><!--BasketBall sliders-->
+        <table>
+            <tr><!--points sliders-->
+                <td>
+                    <p>
+                        <label for="amount">Points range:</label>
+                        <input type="text" id="pointsAmount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                    </p>
+                    <div id="slider-points"></div>
+                </td>
+            </tr>
+            <tr>
+                <!--assits sliders-->
+                <td>
+                    <p>
+                        <label for="amount">Assits range:</label>
+                        <input type="text" id="assitsAmount_basketBall" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                    </p>
+                    <div id="slider-assits_basketBall"></div>
+                </td>
+            </tr>
+            <tr>
+                <!--rebounds sliders-->
+                <td>
+                    <p>
+                        <label for="amount">Rebound range:</label>
+                        <input type="text" id="reboundAmount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                    </p>
+                    <div id="slider-rebound"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="click_basketBall">Submit</button>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <div id="soccerDiv">
+        <table>
+            <tr>
+                <!--goals sliders-->
+                <td>
+                    <p>
+                        <label for="amount">Goals range:</label>
+                        <input type="text" id="goalesAmount_soccer" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                    </p>
+                    <div id="slider-goales_soccer"></div>
+                </td>
+            </tr>
+            <tr>
+            <!--assits sliders-->
             <td>
-                <div>
-                    <input type="button" name="submit" id="click" value="submit">
-                </div>
+                <p>
+                    <label for="amount">Assits range:</label>
+                    <input type="text" id="assitsAmount_soccer" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                </p>
+                <div id="slider-assits_soccer"></div>
             </td>
-        </tr>
-    </table>
- 
- 
+            </tr>
+            <tr>
+                <td>
+                    <button id="click_soccer">Submit</button>
+                </td>
+            </tr>
+        </table>
 
+    </div>
+    <div class="list-group" id="listAth">
 
-   
-
-
-
+    </div>
 </body>
 </html>

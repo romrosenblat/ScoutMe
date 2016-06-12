@@ -41,7 +41,7 @@ public class Soccer : Game
 
         if (HttpContext.Current.Session["userDataSet"] == null) return;
 
-        DBservices dbs = (DBservices)HttpContext.Current.Session["userDataSet"];
+        DBservices dbs = new DBservices();
 
         DataRow dr = dbs.dt.NewRow();
         dr["athleteID"] = athleteID;

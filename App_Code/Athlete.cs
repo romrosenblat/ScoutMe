@@ -289,7 +289,7 @@ public class Athlete
         return txtItems;
     }
 
-    public List<Athlete> AdvanceSerch(decimal hightMax, decimal hightMin, decimal weightMin, decimal weightMax, string sex, int sportID)
+    public DataTable AdvanceSerch(decimal hightMax, decimal hightMin, decimal weightMin, decimal weightMax, string sex, int sportID)
     {
         DataSet ds = new DataSet();
         DataTable dt = new DataTable();
@@ -353,30 +353,37 @@ public class Athlete
 
             try
             {
-                con.Open();
-                using (SqlDataReader dataReader = cmd.ExecuteReader())
-                {
+
+                SqlDataAdapter adptr = new SqlDataAdapter(cmd);
+                adptr.Fill(ds, "t1");
+                return ds.Tables["t1"];
+
+
+                //con.Open();
+
+                //using (SqlDataReader dataReader = cmd.ExecuteReader())
+                //{
                     
-                        Athlete ath = new Athlete();
-                        ath.id = dataReader.GetInt32(0);
-                        //ath.first_name = row["first_name"].ToString();
-                        //ath.last_name = row["last_name"].ToString();
-                        //ath.sportID = int.Parse(row["sportID"].ToString());
-                        //ath.dob = (DateTime)row["date_of_birth"];
-                        //ath.phone = row["phone"].ToString();
-                        //ath.eMail = row["eMail"].ToString();
-                        //ath.hight = (decimal)(row["hight"]);
-                        //ath.weight = (decimal)row["weight"];
-                        //ath.city = row["city"].ToString();
-                        //ath.agentName = row["agentName"].ToString();
-                        //ath.teamName = row["teamName"].ToString();
-                        //ath.isGoaley = (bool)row["isGoaley"];
-                        //ath.sex = row["sex"].ToString();
-                        //ath.password = row["password"].ToString();
-                        //txtItems.Add(ath);
+                //        Athlete ath = new Athlete();
+                //        ath.id = dataReader.GetInt32(0);
+                //        //ath.first_name = row["first_name"].ToString();
+                //        //ath.last_name = row["last_name"].ToString();
+                //        //ath.sportID = int.Parse(row["sportID"].ToString());
+                //        //ath.dob = (DateTime)row["date_of_birth"];
+                //        //ath.phone = row["phone"].ToString();
+                //        //ath.eMail = row["eMail"].ToString();
+                //        //ath.hight = (decimal)(row["hight"]);
+                //        //ath.weight = (decimal)row["weight"];
+                //        //ath.city = row["city"].ToString();
+                //        //ath.agentName = row["agentName"].ToString();
+                //        //ath.teamName = row["teamName"].ToString();
+                //        //ath.isGoaley = (bool)row["isGoaley"];
+                //        //ath.sex = row["sex"].ToString();
+                //        //ath.password = row["password"].ToString();
+                //        //txtItems.Add(ath);
 
                     
-                }
+                //}
                 //SqlDataAdapter da = new SqlDataAdapter(cmd);
                 //da.Fill(ds);
 
@@ -388,40 +395,206 @@ public class Athlete
             }
             finally
             {
-                con.Close();
+               // con.Close();
                 }
             //dt = ds.Tables[0];
 
             //Then return List of string(txtItems) as result
             //List<Athlete> txtItems = new List<Athlete>();
             
-            foreach (DataRow row in dt.Rows)
-            {
-                //String From DataBase(dbValues)
-                Athlete ath = new Athlete();
-                ath.id = int.Parse(row["athleteID"].ToString());
-                ath.first_name = row["first_name"].ToString();
-                ath.last_name = row["last_name"].ToString();
-                ath.sportID = int.Parse(row["sportID"].ToString());
-                ath.dob = (DateTime)row["date_of_birth"];
-                ath.phone = row["phone"].ToString();
-                ath.eMail = row["eMail"].ToString();
-                ath.hight = (decimal)(row["hight"]);
-                ath.weight = (decimal)row["weight"];
-                ath.city = row["city"].ToString();
-                ath.agentName = row["agentName"].ToString();
-                ath.teamName = row["teamName"].ToString();
-                ath.isGoaley = (bool)row["isGoaley"];
-                ath.sex = row["sex"].ToString();
-                ath.password = row["password"].ToString();
-                txtItems.Add(ath);
-            }
-            return txtItems;
+            //foreach (DataRow row in dt.Rows)
+            //{
+            //    //String From DataBase(dbValues)
+            //    Athlete ath = new Athlete();
+            //    ath.id = int.Parse(row["athleteID"].ToString());
+            //    ath.first_name = row["first_name"].ToString();
+            //    ath.last_name = row["last_name"].ToString();
+            //    ath.sportID = int.Parse(row["sportID"].ToString());
+            //    ath.dob = (DateTime)row["date_of_birth"];
+            //    ath.phone = row["phone"].ToString();
+            //    ath.eMail = row["eMail"].ToString();
+            //    ath.hight = (decimal)(row["hight"]);
+            //    ath.weight = (decimal)row["weight"];
+            //    ath.city = row["city"].ToString();
+            //    ath.agentName = row["agentName"].ToString();
+            //    ath.teamName = row["teamName"].ToString();
+            //    ath.isGoaley = (bool)row["isGoaley"];
+            //    ath.sex = row["sex"].ToString();
+            //    ath.password = row["password"].ToString();
+            //    txtItems.Add(ath);
+            //}
+            //return txtItems;
+            return null;
         }
 
         
     }
 
+    public DataTable AdvanceSearch_Soccer(decimal hightMax, decimal hightMin, decimal weightMin, decimal weightMax, string sex,
+        int goalsMin, int goalsMax, int assitsMin,int assitsMax)
+    {
+        DataSet ds = new DataSet();
+        DataTable dt = new DataTable();
+
+        string cStr = WebConfigurationManager.ConnectionStrings["bgroup33_prodConnectionString"].ConnectionString;
+        using (SqlConnection con = new SqlConnection(cStr))
+        {
+            SqlCommand cmd = new SqlCommand("sp_Adcance_Search_Soccer", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter paramweightMin = new SqlParameter("@weight_start", weightMin);
+            SqlParameter paramweightMax = new SqlParameter("@weight_end", weightMax);
+            SqlParameter paramhightMax = new SqlParameter("@hight_start", hightMax);
+            SqlParameter paramhightMin = new SqlParameter("@hight_end", hightMin);
+            SqlParameter paramSex = new SqlParameter("@sex", sex);
+            SqlParameter parmaGoalsMin = new SqlParameter("@goals_start", goalsMin);
+            SqlParameter parmaGoalsMax = new SqlParameter("@goals_end", goalsMax);
+            SqlParameter parmaAssitsMin = new SqlParameter("@assists_start", assitsMin);
+            SqlParameter parmaAssitsMax = new SqlParameter("@assists_end", assitsMax);
+
+
+            cmd.Parameters.Add(paramweightMin);
+            cmd.Parameters.Add(paramweightMax);
+            cmd.Parameters.Add(paramhightMax);
+            cmd.Parameters.Add(paramhightMin);
+            cmd.Parameters.Add(paramSex);
+            cmd.Parameters.Add(goalsMin);
+            cmd.Parameters.Add(goalsMax);
+            cmd.Parameters.Add(assitsMin);
+            cmd.Parameters.Add(assitsMax);
+            List<Athlete> txtItems = new List<Athlete>();
+
+            try
+            {
+
+                SqlDataAdapter adptr = new SqlDataAdapter(cmd);
+                adptr.Fill(ds, "t1");
+                return ds.Tables["t1"];
+            }
+            catch (Exception ex)
+            {
+
+
+            }
+            finally
+            {
+            }
+           
+            return null;
+        }
+    }
+    public DataTable AdvanceSearch_BasketBall(decimal hightMax, decimal hightMin, decimal weightMin, decimal weightMax, string sex,
+        int pointsMin, int pointsMax, int assitsMin, int assitsMax,int reboundsMin,int reboundsMax)
+    {
+        DataSet ds = new DataSet();
+        DataTable dt = new DataTable();
+
+        string cStr = WebConfigurationManager.ConnectionStrings["bgroup33_prodConnectionString"].ConnectionString;
+        using (SqlConnection con = new SqlConnection(cStr))
+        {
+            SqlCommand cmd = new SqlCommand("sp_Adcance_Search_BasketBall", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter paramweightMin = new SqlParameter("@weight_start", weightMin);
+            SqlParameter paramweightMax = new SqlParameter("@weight_end", weightMax);
+            SqlParameter paramhightMax = new SqlParameter("@hight_start", hightMax);
+            SqlParameter paramhightMin = new SqlParameter("@hight_end", hightMin);
+            SqlParameter paramSex = new SqlParameter("@sex", sex);
+            SqlParameter parmapointsMin = new SqlParameter("@points_start", pointsMin);
+            SqlParameter parmapointsMax = new SqlParameter("@points_end", pointsMax);
+            SqlParameter parmaAssitsMin = new SqlParameter("@assists_start", assitsMin);
+            SqlParameter parmaAssitsMax = new SqlParameter("@assists_end", assitsMax);
+            SqlParameter parmaReboundMin = new SqlParameter("@rebounds_start", reboundsMin);
+            SqlParameter parmaReboundMax = new SqlParameter("@rebounds_end", reboundsMax);
+
+
+            cmd.Parameters.Add(paramweightMin);
+            cmd.Parameters.Add(paramweightMax);
+            cmd.Parameters.Add(paramhightMax);
+            cmd.Parameters.Add(paramhightMin);
+            cmd.Parameters.Add(paramSex);
+            cmd.Parameters.Add(parmapointsMin);
+            cmd.Parameters.Add(parmapointsMax);
+            cmd.Parameters.Add(assitsMin);
+            cmd.Parameters.Add(assitsMax);
+            cmd.Parameters.Add(parmaReboundMin);
+            cmd.Parameters.Add(parmaReboundMax);
+            List<Athlete> txtItems = new List<Athlete>();
+
+            try
+            {
+
+                SqlDataAdapter adptr = new SqlDataAdapter(cmd);
+                adptr.Fill(ds, "t1");
+                return ds.Tables["t1"];
+            }
+            catch (Exception ex)
+            {
+
+
+            }
+            finally
+            {
+            }
+
+            return null;
+        }
+    }
+
+    public DataTable AdvanceSearch_HandBall(decimal hightMax, decimal hightMin, decimal weightMin, decimal weightMax, string sex,
+      int goalsMin, int goalsMax, int shotsMin, int shotsMax)
+    {
+        DataSet ds = new DataSet();
+        DataTable dt = new DataTable();
+
+        string cStr = WebConfigurationManager.ConnectionStrings["bgroup33_prodConnectionString"].ConnectionString;
+        using (SqlConnection con = new SqlConnection(cStr))
+        {
+            SqlCommand cmd = new SqlCommand("sp_Adcance_Search_HandBall", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter paramweightMin = new SqlParameter("@weight_start", weightMin);
+            SqlParameter paramweightMax = new SqlParameter("@weight_end", weightMax);
+            SqlParameter paramhightMax = new SqlParameter("@hight_start", hightMax);
+            SqlParameter paramhightMin = new SqlParameter("@hight_end", hightMin);
+            SqlParameter paramSex = new SqlParameter("@sex", sex);
+            SqlParameter parmaGoalMin = new SqlParameter("@goals_start", goalsMin);
+            SqlParameter parmaGoalMax = new SqlParameter("@goals_end", goalsMax);
+            SqlParameter parmaShotsMin = new SqlParameter("@shots_start", shotsMin);
+            SqlParameter parmaShotsMax = new SqlParameter("@shots_end", shotsMax);
+
+
+            cmd.Parameters.Add(paramweightMin);
+            cmd.Parameters.Add(paramweightMax);
+            cmd.Parameters.Add(paramhightMax);
+            cmd.Parameters.Add(paramhightMin);
+            cmd.Parameters.Add(paramSex);
+            cmd.Parameters.Add(parmaGoalMin);
+            cmd.Parameters.Add(parmaGoalMax);
+            cmd.Parameters.Add(parmaShotsMin);
+            cmd.Parameters.Add(parmaShotsMax);
+
+            List<Athlete> txtItems = new List<Athlete>();
+
+            try
+            {
+
+                SqlDataAdapter adptr = new SqlDataAdapter(cmd);
+                adptr.Fill(ds, "t1");
+                return ds.Tables["t1"];
+            }
+            catch (Exception ex)
+            {
+
+
+            }
+            finally
+            {
+            }
+
+            return null;
+        }
+    }
 
 
 }
