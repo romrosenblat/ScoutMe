@@ -213,7 +213,7 @@ function SearchAth(searchSuccess, errorCB) {
 
 
 
-function SendAthleteStats(requestData, athleteType) {
+function SendAthleteStats(requestData, athleteType,callback) {
 
     var methodNamePerAthleteType = "";
     switch (athleteType)
@@ -237,9 +237,10 @@ function SendAthleteStats(requestData, athleteType) {
         type: 'POST',                              
         dataType: 'json',                          
         contentType: 'application/json; charset = utf-8', 
-        success: function(res){console.log(res)},                
+        success: function (res) { callback();},
         error: function (err)
         {
+            callback();
             console.log(err);
             //alert(err);
         }

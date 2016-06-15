@@ -66,7 +66,7 @@ function s1(results) {
         localStorage.city = userObj.City;
         localStorage.agentName = userObj.AgentName;
         localStorage.teamName = userObj.TeamName;
-        localStorage.isGolaey = userObj.IsGolaey;
+        localStorage.isGolaey = userObj.IsGoaley;
         localStorage.sex = userObj.Sex;
         window.location = "athProf.html";
 
@@ -81,7 +81,7 @@ function AthleteIsGoaly()
         || localStorage.isGolaey == 'undefined'
         || localStorage.isGolaey==null)
         return false;
-    return localStorage.isGolaey;
+    return localStorage.isGolaey=='true';
 }
 function GetAthleteId()
 {

@@ -330,6 +330,36 @@ public class WebService : System.Web.Services.WebService
         float Goals, float Assits, float TotalShots,
         float Passes, float Saves_G, float ShotsOnTarget_G, float Goals_G, bool isGoaly)
     {
+         string vsTeamName = Teams.GetTeamById(vsTeam);
+        string athleteTeam = myTeamName;
+        string tempDesc = Date.ToShortDateString() + ", " + athleteTeam + " Vs. " + vsTeamName;
+        Game g = new Game()
+         {
+            AthleteID = athleteID,
+            Date = Date,
+            Minutes =(int)Minutes,
+            Description = tempDesc,
+            SportId = 1
+
+        };
+        int gameId = g.InsertNewGame();
+
+        Soccer b = new Soccer(){
+              GameId = gameId,
+            AthleteID = athleteID,
+            Date = Date,
+            Description = tempDesc,
+            Goals = Goals,
+            Assits = Assits,
+            TotalShots = TotalShots,
+            Passes = Passes,
+            Saves_G = Saves_G,
+            ShotsOnTarget_G = ShotsOnTarget_G,
+            Goals_G = Goals_G,
+            Minutes = (int)Minutes,
+            RedCard = 0,
+        };
+        b.insertGameInfoSoccer(isGoaly);
         return 1;
     }
 
@@ -371,7 +401,7 @@ public class WebService : System.Web.Services.WebService
             TwoMin = TwoMin,
             YellowCard = 0
         };
-        b.insertGameInfoSoccer(isGoaly);
+        b.insertGameInfoHandball(isGoaly);
 
         return 1;
     }
@@ -381,6 +411,37 @@ public class WebService : System.Web.Services.WebService
     public int SetBasketBallStats(int athleteID, DateTime Date, float Minutes, int vsTeam,
         float Points, float Assits, float Rebounds, float Blocks, float TO, float Fouls, float STL)
     {
+        string vsTeamName = Teams.GetTeamById(vsTeam);
+        string athleteTeam = myTeamName;
+        string tempDesc = Date.ToShortDateString() + ", " + athleteTeam + " Vs. " + vsTeamName;
+        Game g = new Game()
+        {
+            AthleteID = athleteID,
+            Date = Date,
+            Minutes = (int)Minutes,
+            Description = tempDesc,
+            SportId = 3
+
+        };
+        int gameId = g.InsertNewGame();
+
+        //int gameId = insert game get id
+
+        BasketBall b = new BasketBall()
+        {
+            GameId = gameId,
+            AthleteID = athleteID,
+            Date = Date,
+            Description = tempDesc,
+            Points = Points,
+            Assits = Assits,
+            Rebounds = Rebounds,
+            Blocks = Blocks,
+            TO =TO,
+            Fouls =   Fouls,
+            STL = STL
+        };
+        b.insertGameInfoBasketBall();
         return 1;
     }
 
@@ -405,20 +466,22 @@ public class WebService : System.Web.Services.WebService
     [WebMethod]
     public List<Soccer> GetSoStats(int athleteID)
     {
-        //return HandBall.GetStatsForAthlere(athleteID);
-        return null;
+        return Soccer.GetStatsForAthlere(athleteID);
+        
     }
 
     [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
     [WebMethod]
     public List<BasketBall> GetBBStats(int athleteID)
     {
-        //return HandBall.GetStatsForAthlere(athleteID);
-        return null;
+        return BasketBall.GetStatsForAthlere(athleteID);
+        
 
     }
 
 
+
+    public string myTeamName { get; set; }
 }
 
 

@@ -5,7 +5,7 @@ using System.Web;
 /// <summary>
 /// Summary description for HandBall
 /// </summary>
-public class HandBall: Game
+public class HandBall : Game
 {
     protected float goals;
     protected float shots;
@@ -14,15 +14,15 @@ public class HandBall: Game
     protected float saves_G;
     protected float shots_G;
 
-    public float Goals       { get { return goals; } set { goals = value; } }
-    public float Shots       { get { return shots; } set { shots = value; } }
-    public float TwoMin         { get { return twoMin; } set { twoMin = value; } }
+    public float Goals { get { return goals; } set { goals = value; } }
+    public float Shots { get { return shots; } set { shots = value; } }
+    public float TwoMin { get { return twoMin; } set { twoMin = value; } }
     public float SevenM_Goal { get { return sevenM_Goal; } set { sevenM_Goal = value; } }
-    public float Saves_G        { get { return saves_G; } set { saves_G = value; } }
-    public float Shots_G        { get { return shots_G; } set { shots_G = value; } }
+    public float Saves_G { get { return saves_G; } set { saves_G = value; } }
+    public float Shots_G { get { return shots_G; } set { shots_G = value; } }
     public HandBall()
     {
-      
+
     }
 
     public static List<HandBall> GetStatsForAthlere(int athleteID)
@@ -41,11 +41,18 @@ public class HandBall: Game
                 player.goals = Convert.ToInt32(dr["goals"]);
                 player.shots = Convert.ToInt32(dr["shots"]);
                 player.twoMin = Convert.ToInt32(dr["2_Min"]);
-                player.sevenM_Goal= Convert.ToInt32(dr["7M_Goal"]);
+                player.sevenM_Goal = Convert.ToInt32(dr["7M_Goal"]);
+                player.redCard = Convert.ToInt32(dr["redCard"]);
+                player.yellowCard = Convert.ToInt32(dr["yellowCard"]);
+                player.minutes = Convert.ToInt32(dr["minutes"]);
+                player.description = dr["description"].ToString();
+                player.saves_G = Convert.ToInt32(dr["saves_G"]);
+                player.shots_G= Convert.ToInt32(dr["shots_G"]);
 
             }
             catch (Exception ex)
             {
+
                 //TODO - problem in the query or one of the retuned values             
             }
             players.Add(player);
@@ -56,7 +63,7 @@ public class HandBall: Game
     }
 
 
-    public void insertGameInfoSoccer(bool isGoaley)
+    public void insertGameInfoHandball(bool isGoaley)
     {
         DBservices dbs = new DBservices();
         dbs = dbs.ReadFromDataBase("bgroup33_prodConnectionString", "Game_HandBall");
@@ -75,13 +82,10 @@ public class HandBall: Game
             dr["saves_G"] = saves_G;
             dr["shots_G"] = shots_G;
         }
-        else
-        {
-            dr["goals"] = goals;
-            dr["shots"] = shots;
-            dr["2_Min"] = twoMin;
-            dr["7M_Goal"] = sevenM_Goal;
-        }
+        dr["goals"] = goals;
+        dr["shots"] = shots;
+        dr["2_Min"] = twoMin;
+        dr["7M_Goal"] = sevenM_Goal;
         dbs.dt.Rows.Add(dr); // add the row to the table
         dbs.Update(); // update the database
     }

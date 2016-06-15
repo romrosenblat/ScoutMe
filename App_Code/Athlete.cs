@@ -222,7 +222,18 @@ public class Athlete
         }
         return teamNumber;
     }
-    
+
+    public static bool GetIsGoalyByAthleteId(int ahtleteId)
+    {
+        DBservices dbs = new DBservices();
+        dbs = dbs.ReadFromDataBaseCommand("SELECT [isGoaley]  FROM [dbo].[Athlete] where  [athleteID]=" + ahtleteId.ToString());
+        foreach (DataRow dr in dbs.dt.Rows)
+        {
+            return dr["isGoaley"].ToString() == "1";
+        }
+        return false;
+    }
+
 
     public List<Athlete> SearchAthlete()
     {

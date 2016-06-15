@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Web;
 /// <summary>
 /// Summary description for BasketBall
@@ -22,10 +24,46 @@ public class BasketBall : Game
     public float STL         { get { return stl; } set { stl = value; } }
     public BasketBall()
     {
-        //
-        // TODO: Add constructor logic here
-        //
+       
     }
+    public static List<BasketBall> GetStatsForAthlere(int athleteID)
+    {
+        DBservices dbs = new DBservices();
+        dbs = dbs.ReadFromDataBaseCommand("select * from [dbo].[Game_BasketBall] where [athleteID]= " + athleteID);
+        List<BasketBall> players = new List<BasketBall>();
+
+        foreach (DataRow dr in dbs.dt.Rows)
+        {
+            BasketBall player = new BasketBall();
+            try
+            {
+                
+                player.athleteID = athleteID;
+                player.date = Convert.ToDateTime(dr["date"]);
+                player.points = Convert.ToInt32(dr["points"]);
+                player.assists = Convert.ToInt32(dr["assists"]);
+                player.rebounds = Convert.ToInt32(dr["rebounds"] );
+                player.blocks = Convert.ToInt32( dr["blocks"]);
+                player.stl = Convert.ToInt32(dr["STL"]);
+                player.minutes = Convert.ToInt32(dr["minutes"]);
+                player._TO = Convert.ToInt32(dr["TO"]);
+                player.fouls = Convert.ToInt32(dr["fouls"]);
+                player.description = dr["description"].ToString();
+
+            }
+            catch (Exception ex)
+            {
+
+                //TODO - problem in the query or one of the retuned values             
+            }
+            players.Add(player);
+        }
+
+
+        return players;
+    }
+
+
     public DataTable readBasketBallDB()
     {
         // create a new DBServices Object
@@ -39,9 +77,9 @@ public class BasketBall : Game
     public void insertGameInfoBasketBall()
     {
 
-        if (HttpContext.Current.Session["userDataSet"] == null) return;
+        DBservices dbs = new DBservices();
+        dbs = dbs.ReadFromDataBase("bgroup33_prodConnectionString", "Game_BasketBall");
 
-        DBservices dbs = (DBservices)HttpContext.Current.Session["userDataSet"];
 
         DataRow dr = dbs.dt.NewRow();
         dr["athleteID"] = athleteID;

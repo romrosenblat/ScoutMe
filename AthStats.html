@@ -12,7 +12,7 @@
     <!-- Custom CSS -->
     <link href="css/portfolio-item.css" rel="stylesheet">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="js/ajaxCalls.js"></script>
     <script src="js/scoutCalls.js"></script>
@@ -25,7 +25,8 @@
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <link href="css/athcss.css" rel="stylesheet" />
     <link href="css/AthStats.css" rel="stylesheet" />
-
+    <link href='http://pics.cssbakery.com/pics/css/verticalbargraph.css' rel='stylesheet'
+          type='text/css' />
     <script>
         function DoSubmit() {
 
@@ -33,7 +34,7 @@
             //If the form is invalid, submit it. The form won't actually submit;
             // this will just cause the browser to display the native HTML5 error messages.
             if (!isFormValid) {
-                $myForm.find(':submit').click()
+                $('#myForm').find(':submit').click();
             }
                 //1. send the stats
                 //2. it will be easier to reload the page
@@ -41,6 +42,7 @@
                 BuildAndSendAthleteStats();
             }
         }
+
 
         function BuildAndSendAthleteStats() {
             var dataRequest = {};
@@ -54,24 +56,23 @@
             switch (GetAthleteType()) {
                 case AthleteSportType.Soccer:
                     dataRequest.validatorLookup = GetInputAttributeById("validatorLookup");
-                    dataRequest.inputGoals_GSoccer = GetInputAttributeById("inputGoals_GSoccer");
-                    dataRequest.inputShotsOnTarget_G = GetInputAttributeById("inputShotsOnTarget_G");
-                    dataRequest.inputSaves_G = GetInputAttributeById("inputSaves_G");
-                    dataRequest.inputPasses = GetInputAttributeById("inputPasses");
-                    dataRequest.inputTotalShotsSoccer = GetInputAttributeById("inputTotalShotsSoccer");
-                    dataRequest.inputAssitsSoccer = GetInputAttributeById("inputAssitsSoccer");
-                    dataRequest.inputGoalsSoccer = GetInputAttributeById("inputGoalsSoccer");
+                    dataRequest.Goals_G = GetInputAttributeById("inputGoals_GSoccer");
+                    dataRequest.ShotsOnTarget_G = GetInputAttributeById("inputShotsOnTarget_G");
+                    dataRequest.Saves_G = GetInputAttributeById("inputSaves_G");
+                    dataRequest.Passes = GetInputAttributeById("inputPasses");
+                    dataRequest.TotalShots = GetInputAttributeById("inputTotalShotsSoccer");
+                    dataRequest.Assits = GetInputAttributeById("inputAssitsSoccer");
+                    dataRequest.Goals = GetInputAttributeById("inputGoalsSoccer");
                     dataRequest.isGoaly = AthleteIsGoaly();
-
                     break;
                 case AthleteSportType.BasketBall:
-                    dataRequest.inputSTL = GetInputAttributeById("inputSTL");
-                    dataRequest.inputFouls = GetInputAttributeById("inputFouls");
-                    dataRequest.inputTurnOvers = GetInputAttributeById("inputTurnOvers");
-                    dataRequest.inputBlocks = GetInputAttributeById("inputBlocks");
-                    dataRequest.inputRebounds = GetInputAttributeById("inputRebounds");
-                    dataRequest.inputAssists = GetInputAttributeById("inputAssists");
-                    dataRequest.inputPoints = GetInputAttributeById("inputPoints");
+                    dataRequest.STL = GetInputAttributeById("inputSTL");
+                    dataRequest.Fouls = GetInputAttributeById("inputFouls");
+                    dataRequest.TurnOvers = GetInputAttributeById("inputTurnOvers");
+                    dataRequest.Blocks = GetInputAttributeById("inputBlocks");
+                    dataRequest.Rebounds = GetInputAttributeById("inputRebounds");
+                    dataRequest.Assists = GetInputAttributeById("inputAssists");
+                    dataRequest.Points = GetInputAttributeById("inputPoints");
                     break;
                 case AthleteSportType.HandBall:
                     dataRequest.Goals = GetInputAttributeById("inputGoalsHand");
@@ -83,7 +84,8 @@
                     dataRequest.isGoaly = AthleteIsGoaly();
                     break;
             }
-            SendAthleteStats(dataRequest, GetAthleteType());
+            SendAthleteStats(dataRequest, GetAthleteType(),
+                function () { location.reload(); });
         }
 
         function GetInputAttributeById(elementId) {
@@ -141,17 +143,47 @@
                 //1. get from DB all stats for this user - ajax call
 
             } FetchDataForUser();
+            function DisplayColumn(isGoaly, athleteType, colName) {
+                if (colName == "GameId" ||
+                    colName == "AthleteID" ||
+                    colName == "SportId" ||
+                    colName == "Date")
+                    return false;
+
+                if (isGoaly)
+                    return true;
+                switch (athleteType) {
+                    case AthleteSportType.Soccer:
+                        if (colName == "Saves_G" ||
+                        colName == "ShotsOnTarget_G" ||
+                        colName == "Goals_G")
+                            return false;
+                        break;
+                    case AthleteSportType.BasketBall:
+                        return true;
+                        break;
+                    case AthleteSportType.HandBall:
+                        if (colName == "Saves_G" ||
+                       colName == "Shots_G")
+                            return false;
+                        break;
+                }
+                return true;
+
+            }
 
             function ContinueLoadingStats(statResults) {
                 //1.1 you need to send according soccer\handball\basketball.
                 //build th
+                var isGoaly = AthleteIsGoaly();
+                var athleteType = GetAthleteType();
                 var tempArrayToStoreColumns = [];
                 $('#statsTable').empty();
                 if (statResults != null && statResults.length > 0) {
                     var th = '';
                     for (var col in statResults[0]) {
                         //to ignore __type etc.
-                        if (col.indexOf('__') == -1) {
+                        if (col.indexOf('__') == -1 && DisplayColumn(isGoaly, athleteType, col)) {
                             //all stats
                             th += "<th>" + col + "</th>";
                             tempArrayToStoreColumns.push(col);
@@ -184,6 +216,8 @@
 
                 //build avg stats
                 $('#avgTable').empty();
+                $('#graph').empty();
+                $('#titles').empty();
 
                 for (var j = 0; j < tempArrayToStoreColumns.length; j++) {
                     //only if it's an int column show it
@@ -198,10 +232,21 @@
                         var tempString = "<tr><td><b>" + tempColName + ": </b></td>";
                         tempString += "<td>" + avg + "</td></tr>";
                         $('#avgTable').append(tempString);
+
+                        var graphstring = "<li class='bar1 purplebar' style='height:" + (avg * 2) + "px;'>" + avg + "</li> ";
+                        var title = "  <li>" + tempColName + "</li>";
+                        $('#graph').append(graphstring);
+                        $('#titles').append(title);
+
                     }
+
                 }
 
+
+
             }
+
+
 
             function InitializeUI() {
                 FetchDataForUser();
@@ -250,7 +295,237 @@
     </script>
 </head>
 <body>
-    <table id="statsTable" class="table-bordered table"></table>
+
+    <h3 class="container">My Statistics</h3>
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addstats" style=" position:relative;top:50%; left:38%;">Add new stat</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addstats" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Please fill the fields</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="myteam">My Team:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" disabled id="myTeamName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="Mdate">Vs. :</label>
+                            <div class="col-sm-10">
+                                <select id="TeamsSelector"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="Mdate">Match Date:</label>
+                            <div class="col-sm-10">
+                                <input type="text" id="datepicker">
+                            </div>
+                        </div>
+                        <br>
+
+                        <div class="col-sm-10">
+
+                            <table class="table-bordered table">
+
+                                <tr class="basketballStats handballStats soccerStats">
+                                    <td>Minutes:</td>
+                                    <td>
+                                        <input class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" id="inputMinutes" />
+                                    </td>
+                                </tr>
+
+                                <!--BasketBall Start-->
+
+                                <tr class="basketballStats">
+                                    <td>Points:</td>
+                                    <td>
+                                        <input class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" id="inputPoints" />
+                                    </td>
+                                </tr>
+                                <tr class="basketballStats">
+                                    <td>Assists:</td>
+                                    <td>
+                                        <input class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" id="inputAssists" />
+                                    </td>
+                                </tr>
+                                <tr class="basketballStats">
+                                    <td>Rebounds:</td>
+                                    <td>
+                                        <input class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" id="inputRebounds" />
+                                    </td>
+                                </tr>
+                                <tr class="basketballStats">
+                                    <td>Blocks:</td>
+                                    <td>
+                                        <input class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" id="inputBlocks" />
+                                    </td>
+                                </tr>
+                                <tr class="basketballStats">
+                                    <td>TurnOvers:</td>
+                                    <td>
+                                        <input class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" id="inputTurnOvers" />
+                                    </td>
+                                </tr>
+                                <tr class="basketballStats">
+                                    <td>Fouls:</td>
+                                    <td>
+                                        <input class="validatorLookup" type="number" value="0" min="0" max="5" step="1" pattern="[0-5]" id="inputFouls" />
+                                    </td>
+                                </tr>
+                                <tr class="basketballStats">
+                                    <td>STL:</td>
+                                    <td>
+                                        <input class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" id="inputSTL" />
+                                    </td>
+                                </tr>
+                                <!--BasketBall End-->
+                                <!--handballStats start-->
+                                <tr class="handballStats">
+                                    <td>Goals:</td>
+                                    <td>
+                                        <input id="inputGoalsHand" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
+                                    </td>
+                                </tr>
+                                <tr class="handballStats">
+                                    <td>Shots:</td>
+                                    <td>
+                                        <input id="inputShots" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
+                                    </td>
+                                </tr>
+                                <tr class="handballStats">
+                                    <td>TwoMin:</td>
+                                    <td>
+                                        <input id="inputTwoMin" class="validatorLookup" type="number" value="0" min="0" max="3" step="1" pattern="[0-3]" />
+                                    </td>
+                                </tr>
+                                <tr class="handballStats">
+                                    <td>SevenM_Goal:</td>
+                                    <td>
+                                        <input id="inputSevenM_Goal" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
+                                    </td>
+                                </tr>
+                                <tr class="handballGoaley">
+                                    <td>Saves_G:</td>
+                                    <td>
+                                        <input id="inputSaves_G" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
+                                    </td>
+                                </tr>
+                                <tr class="handballStats">
+                                    <td>Shots_G:</td>
+                                    <td>
+                                        <input id="inputShots_G" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
+                                    </td>
+                                </tr>
+                                <!--handballStats End-->
+                                <!--Soccer start-->
+
+
+                                <tr class="soccerStats">
+                                    <td>Goals:</td>
+                                    <td>
+                                        <input id="inputGoalsSoccer" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
+                                    </td>
+                                </tr>
+
+                                <tr class="soccerStats">
+                                    <td>Assits:</td>
+                                    <td>
+                                        <input id="inputAssitsSoccer" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
+                                    </td>
+                                </tr>
+
+                                <tr class="soccerStats">
+                                    <td>TotalShots:</td>
+                                    <td>
+                                        <input id="inputTotalShotsSoccer" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
+                                    </td>
+                                </tr>
+
+                                <tr class="soccerStats">
+                                    <td>Passes:</td>
+                                    <td>
+                                        <input id="inputPasses" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
+                                    </td>
+                                </tr>
+
+                                <tr class="soccerStatsGoaley">
+                                    <td>Saves_G:</td>
+                                    <td>
+                                        <input id="inputSaves_G" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
+                                    </td>
+                                </tr>
+
+                                <tr class="soccerStats">
+                                    <td>ShotsOnTarget_G:</td>
+                                    <td>
+                                        <input id="inputShotsOnTarget_G" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
+                                    </td>
+                                </tr>
+
+
+                                <tr class="soccerStats">
+                                    <td>Goals_G:</td>
+                                    <td>
+                                        <input id="inputGoals_GSoccer" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
+                                    </td>
+                                </tr>
+                                <!--Soccer End-->
+
+
+
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnAdd" onclick="DoSubmit()" data-dismiss="modal" class="btn btn-default">Add</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#viewavarage" style="position:relative;top:50%; left:38%;">View total avarage</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="viewavarage" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Modal Header</h4>
+                </div>
+                <div class="modal-body">
+                    <table id="avgTable" class=""></table>
+                </div>
+                <div id="bargraph" class="bargraph" style="width: 365px;">
+                    <ul id="graph" class="bars"></ul>
+                    <ul id="titles" class="label"></ul>
+                    <ul class="y-axis"><li>100</li><li>75</li><li>50</li><li>25</li><li>0</li></ul>
+                    <p class="centered">Yearly US Fruit Consumption in Tons</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <table id="statsTable" class="table-bordered table" style="background-color:white"></table>
 
 
     <!-- Navigation -->
@@ -283,211 +558,9 @@
     </nav>
 
     <div class="container" style="margin-top:50px">
-        <h3>My Statistics</h3>
+
     </div>
-    <form id="myForm">
-        <div class="container" style="margin-top:10px">
-
-            <div style="width: 100%;align-content:center;">
-                <div style="padding-left:10px;float:left; width: 50%;background-color:yellow;padding-right:10px">
-                    <div>
-                        <h2>Add Statistics</h2>
-                        <div class="form-horizontal" role="form">
-                            <div class="form-group">
-                                <label class="control-label col-sm-2" for="myteam">My Team:</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" disabled id="myTeamName">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-2" for="Mdate">Vs. :</label>
-                                <div class="col-sm-10">
-                                    <select id="TeamsSelector"></select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-2" for="Mdate">Match Date:</label>
-                                <div class="col-sm-10">
-                                    <input type="text" id="datepicker">
-                                </div>
-                            </div>
-                            <br>
-
-                            <div class="col-sm-10">
-
-                                <table class="table-bordered table">
-
-                                    <tr class="basketballStats handballStats soccerStats">
-                                        <td>Minutes:</td>
-                                        <td>
-                                            <input class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" id="inputMinutes" />
-                                        </td>
-                                    </tr>
-
-                                    <!--BasketBall Start-->
-
-                                    <tr class="basketballStats">
-                                        <td>Points:</td>
-                                        <td>
-                                            <input class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" id="inputPoints" />
-                                        </td>
-                                    </tr>
-                                    <tr class="basketballStats">
-                                        <td>Assists:</td>
-                                        <td>
-                                            <input class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" id="inputAssists" />
-                                        </td>
-                                    </tr>
-                                    <tr class="basketballStats">
-                                        <td>Rebounds:</td>
-                                        <td>
-                                            <input class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" id="inputRebounds" />
-                                        </td>
-                                    </tr>
-                                    <tr class="basketballStats">
-                                        <td>Blocks:</td>
-                                        <td>
-                                            <input class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" id="inputBlocks" />
-                                        </td>
-                                    </tr>
-                                    <tr class="basketballStats">
-                                        <td>TurnOvers:</td>
-                                        <td>
-                                            <input class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" id="inputTurnOvers" />
-                                        </td>
-                                    </tr>
-                                    <tr class="basketballStats">
-                                        <td>Fouls:</td>
-                                        <td>
-                                            <input class="validatorLookup" type="number" value="0" min="0" max="5" step="1" pattern="[0-5]" id="inputFouls" />
-                                        </td>
-                                    </tr>
-                                    <tr class="basketballStats">
-                                        <td>STL:</td>
-                                        <td>
-                                            <input class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" id="inputSTL" />
-                                        </td>
-                                    </tr>
-                                    <!--BasketBall End-->
-                                    <!--handballStats start-->
-                                    <tr class="handballStats">
-                                        <td>Goals:</td>
-                                        <td>
-                                            <input id="inputGoalsHand" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
-                                        </td>
-                                    </tr>
-                                    <tr class="handballStats">
-                                        <td>Shots:</td>
-                                        <td>
-                                            <input id="inputShots" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
-                                        </td>
-                                    </tr>
-                                    <tr class="handballStats">
-                                        <td>TwoMin:</td>
-                                        <td>
-                                            <input id="inputTwoMin" class="validatorLookup" type="number" value="0" min="0" max="3" step="1" pattern="[0-3]" />
-                                        </td>
-                                    </tr>
-                                    <tr class="handballStats">
-                                        <td>SevenM_Goal:</td>
-                                        <td>
-                                            <input id="inputSevenM_Goal" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
-                                        </td>
-                                    </tr>
-                                    <tr class="handballGoaley">
-                                        <td>Saves_G:</td>
-                                        <td>
-                                            <input id="inputSaves_G" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
-                                        </td>
-                                    </tr>
-                                    <tr class="handballStats">
-                                        <td>Shots_G:</td>
-                                        <td>
-                                            <input id="inputShots_G" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
-                                        </td>
-                                    </tr>
-                                    <!--handballStats End-->
-                                    <!--Soccer start-->
-
-
-                                    <tr class="soccerStats">
-                                        <td>Goals:</td>
-                                        <td>
-                                            <input id="inputGoalsSoccer" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
-                                        </td>
-                                    </tr>
-
-                                    <tr class="soccerStats">
-                                        <td>Assits:</td>
-                                        <td>
-                                            <input id="inputAssitsSoccer" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
-                                        </td>
-                                    </tr>
-
-                                    <tr class="soccerStats">
-                                        <td>TotalShots:</td>
-                                        <td>
-                                            <input id="inputTotalShotsSoccer" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
-                                        </td>
-                                    </tr>
-
-                                    <tr class="soccerStats">
-                                        <td>Passes:</td>
-                                        <td>
-                                            <input id="inputPasses" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
-                                        </td>
-                                    </tr>
-
-                                    <tr class="soccerStatsGoaley">
-                                        <td>Saves_G:</td>
-                                        <td>
-                                            <input id="inputSaves_G" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
-                                        </td>
-                                    </tr>
-
-                                    <tr class="soccerStats">
-                                        <td>ShotsOnTarget_G:</td>
-                                        <td>
-                                            <input id="inputShotsOnTarget_G" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
-                                        </td>
-                                    </tr>
-
-
-                                    <tr class="soccerStats">
-                                        <td>Goals_G:</td>
-                                        <td>
-                                            <input id="inputGoals_GSoccer" class="validatorLookup" type="number" value="0" min="0" max="99" step="1" pattern="[0-9][0-9]" />
-                                        </td>
-                                    </tr>
-                                    <!--Soccer End-->
-
-
-
-
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div style="background-color:red">
-                    Averages
-                    <table id="avgTable" class=""></table>
-                </div>
-            </div>
-            <div style="clear:both"></div>
-
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button id="btnAdd" onclick="DoSubmit()" class="btn btn-default">Add</button>
-
-                </div>
-            </div>
-
-        </div>
-
-
-
-    </form>
+    <form id="myForm"></form>
     <style>
         tr.basketballStats, tr.handballStats, tr.soccerStats, tr.handballGoaley, tr.soccerStatsGoaley {
             display: none;
