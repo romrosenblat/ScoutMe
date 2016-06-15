@@ -6,6 +6,7 @@ using System.Data;
 using System.Web.Script.Serialization;
 using System.Web.Script.Services;
 using System.Web.Services;
+using System.Text;
 
 /// <summary>
 /// Summary description for WebService
@@ -450,10 +451,77 @@ public class WebService : System.Web.Services.WebService
     public string AdvanceSearch(decimal hightMax,decimal hightMin,decimal weightMin,decimal wegithMax,string sex,int sportID)
     {
         Athlete ath = new Athlete();
-        JavaScriptSerializer js = new JavaScriptSerializer();
-        string result = js.Serialize(ath.AdvanceSerch(hightMax,hightMin,weightMin,wegithMax,sex,sportID));
-        return result;
+        return DataTableToJsonObj(ath.AdvanceSerch(hightMax,hightMin,weightMin,wegithMax,sex,sportID));
     }
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    [WebMethod]
+    public string AdvanceSearch_Soccer(decimal hightMax, decimal hightMin, decimal weightMin, decimal wegithMax, string sex,
+        int _goalsMin, int _goalsMax, int _assitsMin, int _assitsMax)
+    {
+        Athlete ath = new Athlete();
+        return DataTableToJsonObj(ath.AdvanceSearch_Soccer(hightMax, hightMin, weightMin, wegithMax, sex,_goalsMin,_goalsMax, _assitsMin,_assitsMax));
+    }
+
+
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    [WebMethod]
+    public string AdvanceSearch_HandBall(decimal hightMax, decimal hightMin, decimal weightMin, decimal wegithMax, string sex,
+        int _goalsMin, int _goalsMax, int _shotsMin, int _shotsMax)
+    {
+        Athlete ath = new Athlete();
+        return DataTableToJsonObj(ath.AdvanceSearch_HandBall(hightMax, hightMin, weightMin, wegithMax, sex, _goalsMin, _goalsMax, _shotsMin,_shotsMax));
+    }
+
+
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    [WebMethod]
+    public string AdvanceSearch_BasketBall(decimal hightMax, decimal hightMin, decimal weightMin, decimal wegithMax, string sex,
+        int _pointsMin, int _pointsMax, int _assitsMin, int _assitsMax,int _reboundMin, int _reboundMax)
+    {
+        Athlete ath = new Athlete();
+        return DataTableToJsonObj(ath.AdvanceSearch_BasketBall(hightMax, hightMin, weightMin, wegithMax, sex,_pointsMin,_pointsMax,_assitsMin,_assitsMax,_reboundMin,_reboundMax));
+    }
+
+
+    public string DataTableToJsonObj(DataTable dt)
+    {
+        DataSet ds = new DataSet();
+        ds.Merge(dt);
+        StringBuilder JsonString = new StringBuilder();
+        if (ds != null && ds.Tables[0].Rows.Count > 0)
+        {
+            JsonString.Append("[");
+            for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+            {
+                JsonString.Append("{");
+                for (int j = 0; j < ds.Tables[0].Columns.Count; j++)
+                {
+                    if (j < ds.Tables[0].Columns.Count - 1)
+                    {
+                        JsonString.Append("\"" + ds.Tables[0].Columns[j].ColumnName.ToString() + "\":" + "\"" + ds.Tables[0].Rows[i][j].ToString() + "\",");
+                    }
+                    else if (j == ds.Tables[0].Columns.Count - 1)
+                    {
+                        JsonString.Append("\"" + ds.Tables[0].Columns[j].ColumnName.ToString() + "\":" + "\"" + ds.Tables[0].Rows[i][j].ToString() + "\"");
+                    }
+                }
+                if (i == ds.Tables[0].Rows.Count - 1)
+                {
+                    JsonString.Append("}");
+                }
+                else
+                {
+                    JsonString.Append("},");
+                }
+            }
+            JsonString.Append("]");
+            return JsonString.ToString();
+        }
+        else
+        {
+            return null;
+        }
+    }  
 
     [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
     [WebMethod]
