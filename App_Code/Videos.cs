@@ -64,6 +64,10 @@ public class Videos
         dr["date"] = date;
         dbs.dt.Rows.Add(dr); // add the row to the table
         dbs.Update(); // update the database
+
+        Feed feed = new Feed();
+        feed.InsertToFeed_video(athleteId,videoURL,descripition);
+
     }
 
     public List<Videos> GetAthleteVideos(int athleteID)

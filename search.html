@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Athlete Profile</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/portfolio-item.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="js/ajaxCalls.js"></script>
+    <script src="js/scoutCalls.js"></script>
+    <script src="js/jquery.js"></script>
+    <link href="js/jquery-ui.css" rel="stylesheet" />
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/jquery1.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <!--<link rel="stylesheet" href="/resources/demos/style.css">-->
+    <link href="css/athcss.css" rel="stylesheet" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            writeAthlete();
+            SearchAth(searchSuccess, errorCB)
+            function searchSuccess(resutls) {
+                athleteList = $.parseJSON(resutls.d);
+                namesonly = [];
+                var temparr;
+                for (var i = 0; i < athleteList.length; i++) {
+                    namesonly.push(athleteList[i].First_name + ' ' + athleteList[i].Last_name)
+                }
+                $("#inputName").autocomplete({
+                    source: namesonly
+                });
+            }
+            $('#inputName').on('autocompleteselect', function (e, ui) {
+                var name = ui.item.value;
+                for (var i = 0; i < athleteList.length; i++) {
+                    if (name == athleteList[i].First_name + ' ' + athleteList[i].Last_name) {
+                        alert(name);
+                    }
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <!-- Page Content -->
+    <div class="container">
+        <!-- Portfolio Item Heading -->
+        <div class="row">
+            <table>
+                <tr>
+                    <td><span class="label label-default" id="TopAtName">  </span></td>
+                    <td>
+                        <div class="ui-widget">
+                            <label for="inputName">Name: </label>
+                            <input id="inputName">
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

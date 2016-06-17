@@ -28,9 +28,9 @@
     <link href="css/athcss.css" rel="stylesheet" />
     <script type="text/javascript">
         $(document).ready(function () {
-            writeAthlete()
-
-                
+            writeAthlete();
+            
+            ShowFeed();
 
             $("#athEditBTN").click(function () {
                 window.location = "AtEditDetailsPage.html";
@@ -45,21 +45,45 @@
             });
         });
 
-        $("#searchAth").autocomplete({
-            source: searchAth()
-        });
-        function searchAth() {
-            //var prefix = document.getElementById("searchAth").value;
-            //// create a json request
-            //var request = {
-            //    prefix: prefix
-            //}
+        function ShowFeed() {
+            var request = {
+                //_athleteID : localStorage.Id
+                _athleteID : 25//only for testing, remove after integration
+            }
+            ShowFeedAjax(request,ShowFeedSuccess, errorCB)
+        };
 
-            // activate the ajax function
-            //SearchAth(request, searchSuccess, errorCB);
-        }
+        function ShowFeedAjax(request,successFeed, errorCB2) {
 
-        
+           var dataString = JSON.stringify(request);
+
+           $.ajax({ // ajax call starts
+               url: 'WebService.asmx/GetFeed',   // server side web service method
+               data: dataString,                          // the parameters sent to the server
+               type: 'POST',                              // can be also GET
+               dataType: 'json',                          // expecting JSON datatype from the server
+               contentType: 'application/json; charset = utf-8', // sent to the server
+               success: successFeed,                // data.d id the Variable data contains the data we get from serverside
+               error: errorCB2
+           }) // end of ajax call
+       }
+
+       function ShowFeedSuccess(data) {
+           if (data != "") {
+               var feedArr = JSON.parse(data.d);
+               for (var i = 0; i < feedArr.length; i++) {
+                   $("#feedHead").append('<div class="panel-heading">' + feedArr[i].name + '</div>'
+                       + '<div class="panel-body">' + feedArr[i].description + '</div>');
+               }
+           } else {
+               $('#feedHead').append("Error in Feed,please refresh the page");
+           }
+       }
+
+       function errorCB() {
+           alert();
+       }
+
     </script>
 </head>
 <body>
@@ -100,12 +124,12 @@
             <table>
                 <tr>
                     <td><span class="label label-default" id="TopAtName">  </span></td>
-                   <td>
-                       <div class="ui-widget">
-                           <label for="searchAth">Name: </label>
-                           <input id="searchAth">
-                       </div>
-                   </td>
+                    <td>
+                        <div class="ui-widget">
+                            <label for="searchAth">Name: </label>
+                            <input id="searchAth">
+                        </div>
+                    </td>
                 </tr>
             </table>
 
@@ -113,13 +137,11 @@
         <!-- /.row -->
         <!-- Live feed  -->
         <div class="row">
-           <div class="container col-md-8">
-            <h2>Panels with Contextual Classes</h2>
-             <div class="panel panel-primary">
-                <div class="panel-heading"></div>
-                <div class="panel-body"></div>
-              </div>
-             </div>
+            <div class="container col-md-8">
+                <h2>Live Feed</h2>
+                <div class="panel panel-primary" id="feedHead">
+                </div>
+            </div>
 
             <div class="col-sm-2 sidenav">
                 <h4>About</h4>
@@ -190,7 +212,7 @@
                 </div>
 
 
-                <div class="col-sm-3 col-xs-6"  style="float:right" >
+                <div class="col-sm-3 col-xs-6" style="float:right">
                     <a href="#">
                         <img class="img-responsive portfolio-item" src="img/videosf.jpg" alt="" id="getVideoPage">
                     </a>
@@ -202,7 +224,7 @@
                     </a>
                 </div>
 
-           
+
             </div>
             <!-- /.row -->
 
@@ -212,7 +234,7 @@
             <footer>
                 <div class="row">
                     <div class="col-lg-12">
-                        
+
                     </div>
                 </div>
                 <!-- /.row -->
@@ -225,7 +247,7 @@
 
         <!-- Bootstrap Core JavaScript -->
         <script src="js/bootstrap.min.js"></script>
-</div>
+    </div>
 </body>
 
 </html>

@@ -66,6 +66,76 @@ public class Feed
             {
             }
         }
-    
+
+    }
+
+    public void InsertToFeed_video(int id,string videoURL ,string desc)
+    {
+        DataSet ds = new DataSet();
+        DataTable dt = new DataTable();
+
+        string cStr = WebConfigurationManager.ConnectionStrings["bgroup33_prodConnectionString"].ConnectionString;
+        using (SqlConnection con = new SqlConnection(cStr))
+        {
+            SqlCommand cmd = new SqlCommand("sp_insertFeed_video", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter paramAthleteID = new SqlParameter("@athleteID", id);
+            SqlParameter paramVideo = new SqlParameter("@videoURL", videoURL);
+            SqlParameter paramDescription = new SqlParameter("@desc", desc);
+
+
+            cmd.Parameters.Add(paramAthleteID);
+            cmd.Parameters.Add(paramVideo);
+            cmd.Parameters.Add(paramDescription);
+
+
+            try
+            {
+
+                SqlDataAdapter adptr = new SqlDataAdapter(cmd);
+                adptr.Fill(ds, "t1");
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+            }
+        }
+
+    }
+
+    public DataTable GetLiveFeed(int athleteID)
+    {
+        DataSet ds = new DataSet();
+        DataTable dt = new DataTable();
+
+        string cStr = WebConfigurationManager.ConnectionStrings["bgroup33_prodConnectionString"].ConnectionString;
+        using (SqlConnection con = new SqlConnection(cStr))
+        {
+            SqlCommand cmd = new SqlCommand("sp_getLast_Games", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            SqlParameter paramAthleteID = new SqlParameter("@athleteID", athleteID);
+            cmd.Parameters.Add(paramAthleteID);
+
+            try
+            {
+                SqlDataAdapter adptr = new SqlDataAdapter(cmd);
+                adptr.Fill(ds, "t1");
+                return ds.Tables["t1"];
+            }
+            catch (Exception ex)
+            {
+
+
+            }
+            finally
+            {
+            }
+
+            return null;
+        }
     }
 }

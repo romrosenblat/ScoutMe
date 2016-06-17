@@ -482,6 +482,15 @@ public class WebService : System.Web.Services.WebService
         return DataTableToJsonObj(ath.AdvanceSearch_BasketBall(hightMax, hightMin, weightMin, wegithMax, sex,_pointsMin,_pointsMax,_assitsMin,_assitsMax,_reboundMin,_reboundMax));
     }
 
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    [WebMethod]
+    public string GetFeed(int _athleteID)
+       
+    {
+        Feed feed = new Feed();
+        return DataTableToJsonObj(feed.GetLiveFeed(_athleteID));
+    }
+
 
     public string DataTableToJsonObj(DataTable dt)
     {
