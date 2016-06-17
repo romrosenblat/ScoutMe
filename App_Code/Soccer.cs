@@ -107,5 +107,9 @@ public class Soccer : Game
         dr["passes"] = passes;
         dbs.dt.Rows.Add(dr); // add the row to the table
         dbs.Update(); // update the database
+
+
+        Feed feed = new Feed();
+        feed.InsertToFeed_NewGame(athleteID, description);
     }
 }

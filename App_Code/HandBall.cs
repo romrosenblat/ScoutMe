@@ -88,6 +88,10 @@ public class HandBall : Game
         dr["7M_Goal"] = sevenM_Goal;
         dbs.dt.Rows.Add(dr); // add the row to the table
         dbs.Update(); // update the database
+
+
+        Feed feed = new Feed();
+        feed.InsertToFeed_NewGame(athleteID, description);
     }
 }
 
