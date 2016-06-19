@@ -607,5 +607,34 @@ public class Athlete
         }
     }
 
+    public DataTable GetAthCount()
+    {
+        DataSet ds = new DataSet();
+        DataTable dt = new DataTable();
+
+        string cStr = WebConfigurationManager.ConnectionStrings["bgroup33_prodConnectionString"].ConnectionString;
+        using (SqlConnection con = new SqlConnection(cStr))
+        {
+            SqlCommand cmd = new SqlCommand("sp_getAthletesCount", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            try
+            {
+                SqlDataAdapter adptr = new SqlDataAdapter(cmd);
+                adptr.Fill(ds, "t1");
+                return ds.Tables["t1"];
+            }
+            catch (Exception ex)
+            {
+
+
+            }
+            finally
+            {
+            }
+
+            return null;
+        }
+    }
 
 }

@@ -491,6 +491,15 @@ public class WebService : System.Web.Services.WebService
         return DataTableToJsonObj(feed.GetLiveFeed(_athleteID));
     }
 
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    [WebMethod]
+    public string GetAthleteCount()
+
+    {
+        Athlete ath = new Athlete();
+        return DataTableToJsonObj(ath.GetAthCount());
+    }
+
 
     public string DataTableToJsonObj(DataTable dt)
     {

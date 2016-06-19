@@ -1,76 +1,115 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>Athlete Profile</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="css/portfolio-item.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <title>ScoutMe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/snippet.css" rel="stylesheet" />
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="js/jquery.js"></script>
     <script src="js/ajaxCalls.js"></script>
     <script src="js/scoutCalls.js"></script>
-    <script src="js/jquery.js"></script>
-    <link href="js/jquery-ui.css" rel="stylesheet" />
-    <script src="js/jquery-ui.js"></script>
-    <script src="js/jquery1.js"></script>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <!--<link rel="stylesheet" href="/resources/demos/style.css">-->
-    <link href="css/athcss.css" rel="stylesheet" />
-    <script type="text/javascript">
+    <script>
+
         $(document).ready(function () {
-            writeAthlete();
-            SearchAth(searchSuccess, errorCB)
-            function searchSuccess(resutls) {
-                athleteList = $.parseJSON(resutls.d);
-                namesonly = [];
-                var temparr;
-                for (var i = 0; i < athleteList.length; i++) {
-                    namesonly.push(athleteList[i].First_name + ' ' + athleteList[i].Last_name)
-                }
-                $("#inputName").autocomplete({
-                    source: namesonly
-                });
-            }
-            $('#inputName').on('autocompleteselect', function (e, ui) {
-                var name = ui.item.value;
-                for (var i = 0; i < athleteList.length; i++) {
-                    if (name == athleteList[i].First_name + ' ' + athleteList[i].Last_name) {
-                        alert(name);
-                    }
-                }
-            });
-
-
+            CountAthletes();
         });
+
+       function CountAthletes(){
+           AthletesCount(AthletesCountSuccess, erorrCB);
+        }
+
+       function AthletesCount(AthletesCountSuccess, erorrCB) {
+
+
+            $.ajax({ // ajax call starts
+                url: 'WebService.asmx/GetAthleteCount',   // server side web service method
+                type: 'POST',                              // can be also GET
+                dataType: 'json',                          // expecting JSON datatype from the server
+                contentType: 'application/json; charset = utf-8', // sent to the server
+                success: AthletesCountSuccess,                // data.d id the Variable data contains the data we get from serverside
+                error: erorrCB
+            }) // end of ajax call
+       }
+
+       function AthletesCountSuccess(data) {
+           var athleteArr = JSON.parse(data.d);
+               soccerCount = athleteArr[0].count;
+               basketBallCount = athleteArr[1].count;
+               handBallCount = athleteArr[2].count;
+       }
+
+       function erorrCB() {
+
+       }
+
+        google.charts.load("current", { packages: ["corechart"] });
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+              ['Sport', 'Athletes Registered'],
+              ['Soccer', parseInt(soccerCount)],
+              ['BasketBall', parseInt(basketBallCount)],
+            ['HandBall', parseInt(handBallCount)]
+            ]);
+
+            var options = {
+                title: 'Athletes Registered',
+                pieHole: 0.4,
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+            chart.draw(data, options);
+        }
+        $(document).ready(function () {
+            $("#loginBtn").click(function () {
+                wireLoginPage();
+            });
+        });
+
+
     </script>
 </head>
 <body>
-    <!-- Page Content -->
-    <div class="container">
-        <!-- Portfolio Item Heading -->
-        <div class="row">
-            <table>
-                <tr>
-                    <td><span class="label label-default" id="TopAtName">  </span></td>
-                    <td>
-                        <div class="ui-widget">
-                            <label for="inputName">Name: </label>
-                            <input id="inputName">
-                        </div>
-                    </td>
-                </tr>
-            </table>
+    <!--Google Fonts-->
+    <link href='http://fonts.googleapis.com/css?family=Stalemate|Balthazar&subset=latin,latin-ext' rel='stylesheet'
+          type='text/css'>
+    <!--Font Awesome-->
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <div class="bootshape login-form">
+        <div class="col-sm-6 col-md-5 col-lg-4 col-sm-offset-2 text-center login-popup-wrap">
+            <div class="login-popup">
+                <h1 class="title"><strong>ScoutMe</strong></h1>
+
+                <div class="form-group">
+                    <input type="text" class="form-control text-center text" id="userName" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control text-center text" id="password" placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <input type="radio" name="type" value="Athlete" checked="checked" />Athlete
+                    <input type="radio" name="type" value="Agent" />Agent
+                    <input type="radio" name="type" value="Team" />Team
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default submit" id="loginBtn">Sign In</button>
+                </div>
+
+                <div class="divider"></div>
+                <div class="divider-label"></div>
+
+                <div>
+                    <a href="forgot.html">FORGOT PASSWORD?</a>
+                </div>
+                <div>
+                    <a href="signup.html">NOT A MEMBER YET?</a>
+                </div>
+            </div>
+
         </div>
     </div>
-</body>
+    <div id="donutchart" style="width: 900px; height: 500px;"></div>
 
+</body>
 </html>
