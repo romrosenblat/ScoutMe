@@ -69,7 +69,7 @@
           max: 500,
           values: [1, 55],
           slide: function (event, ui) {
-              $("#golesAmount_handBall").val(ui.values[0] + ui.values[1]);
+              $("#golesAmount_handBall").val(ui.values[0] +" - "+ ui.values[1]);
           },
           stop: function (event, ui) {
               golesMinmum = ui.values[0];
@@ -78,7 +78,7 @@
       });
 
       $("#golesAmount_handBall").val($("#slider-goles_handBall").slider("values", 0) +
-     $("#slider-goles_handBall").slider("values", 1));
+     " - "+$("#slider-goles_handBall").slider("values", 1));
 
       $("#slider-goales_soccer").slider({//goles slider soccer
           range: true,
@@ -86,7 +86,7 @@
           max: 500,
           values: [1, 55],
           slide: function (event, ui) {
-              $("#goalesAmount_soccer").val(ui.values[0] + ui.values[1]);
+              $("#goalesAmount_soccer").val(ui.values[0] + " - " + ui.values[1]);
           },
           stop: function (event, ui) {
               golesMinmum = ui.values[0];
@@ -95,7 +95,7 @@
       });
 
       $("#goalesAmount_soccer").val($("#slider-goales_soccer").slider("values", 0) +
-     $("#slider-goales_soccer").slider("values", 1));
+     " - "+$("#slider-goales_soccer").slider("values", 1));
 
       $("#slider-shots").slider({//shots slider
           range: true,
@@ -103,7 +103,7 @@
           max: 500,
           values: [1, 55],
           slide: function (event, ui) {
-              $("#shotsAmount").val( ui.values[0] + ui.values[1]);
+              $("#shotsAmount").val(ui.values[0] + " - " + ui.values[1]);
           },
           stop: function (event, ui) {
               shotsMinmum = ui.values[0];
@@ -112,7 +112,7 @@
       });
 
       $("#shotsAmount").val( $("#slider-shots").slider("values", 0) +
-     $("#slider-shots").slider("values", 1));
+    " - " + $("#slider-shots").slider("values", 1));
 
       $("#slider-points").slider({//points slider
           range: true,
@@ -120,7 +120,7 @@
           max: 500,
           values: [10, 120],
           slide: function (event, ui) {
-              $("#pointsAmount").val(ui.values[0] + ui.values[1]);
+              $("#pointsAmount").val(ui.values[0] + " - " + ui.values[1]);
           },
           stop: function (event, ui) {
               pointsMinmum = ui.values[0];
@@ -129,7 +129,7 @@
       });
 
       $("#pointsAmount").val($("#slider-points").slider("values", 0) +
-     $("#slider-points").slider("values", 1));
+    " - " + $("#slider-points").slider("values", 1));
 
       $("#slider-assits_basketBall").slider({//assits slider basketBall
           range: true,
@@ -137,7 +137,7 @@
           max: 500,
           values: [1, 55],
           slide: function (event, ui) {
-              $("#assitsAmount_basketBall").val(ui.values[0] + ui.values[1]);
+              $("#assitsAmount_basketBall").val(ui.values[0] + " - " + ui.values[1]);
           },
           stop: function (event, ui) {
               assitsMinmum = ui.values[0];
@@ -146,7 +146,7 @@
       });
 
       $("#assitsAmount_basketBall").val($("#slider-assits_basketBall").slider("values", 0) +
-     $("#slider-assits_basketBall").slider("values", 1));
+    " - " + $("#slider-assits_basketBall").slider("values", 1));
 
       $("#slider-assits_soccer").slider({//assits slider soccer
           range: true,
@@ -154,7 +154,7 @@
           max: 500,
           values: [1, 55],
           slide: function (event, ui) {
-              $("#assitsAmount_soccer").val(ui.values[0] + ui.values[1]);
+              $("#assitsAmount_soccer").val(ui.values[0] + " - " + ui.values[1]);
           },
           stop: function (event, ui) {
               assitsMinmum = ui.values[0];
@@ -163,7 +163,7 @@
       });
 
       $("#assitsAmount_soccer").val($("#slider-assits_soccer").slider("values", 0) +
-     $("#slider-assits_soccer").slider("values", 1));
+    " - " + $("#slider-assits_soccer").slider("values", 1));
 
       $("#slider-rebound").slider({//rebound slider
           range: true,
@@ -171,7 +171,7 @@
           max: 500,
           values: [1, 55],
           slide: function (event, ui) {
-              $("#reboundAmount").val(ui.values[0] + ui.values[1]);
+              $("#reboundAmount").val(ui.values[0] + " - " + ui.values[1]);
           },
           stop: function (event, ui) {
               reboundMinmum = ui.values[0];
@@ -180,7 +180,7 @@
       });
 
       $("#reboundAmount").val($("#slider-rebound").slider("values", 0) +
-     $("#slider-rebound").slider("values", 1));
+    " - " + $("#slider-rebound").slider("values", 1));
       
   });
   $(document).ready(function () {

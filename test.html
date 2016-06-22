@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/snippet.css" rel="stylesheet" />
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>
     <script src="js/jquery.js"></script>
     <script src="js/ajaxCalls.js"></script>
     <script src="js/scoutCalls.js"></script>
@@ -14,9 +14,11 @@
         $(document).ready(function () {
             CountAthletes();
         });
-
+            
        function CountAthletes(){
            AthletesCount(AthletesCountSuccess, erorrCB);
+           AllUseresCount(UsersCountSuccess, erorrCB);
+
         }
 
        function AthletesCount(AthletesCountSuccess, erorrCB) {
@@ -39,34 +41,87 @@
                handBallCount = athleteArr[2].count;
        }
 
+       function AllUseresCount(UsersCountSuccess, erorrCB) {
+
+
+           $.ajax({ // ajax call starts
+               url: 'WebService.asmx/UsersCount',   // server side web service method
+               type: 'POST',                              // can be also GET
+               dataType: 'json',                          // expecting JSON datatype from the server
+               contentType: 'application/json; charset = utf-8', // sent to the server
+               success: UsersCountSuccess,                // data.d id the Variable data contains the data we get from serverside
+               error: erorrCB
+           }) // end of ajax call
+       }
+
+       function UsersCountSuccess(data) {
+           var athleteArr = JSON.parse(data.d);
+           athletecount = athleteArr[0].count;
+           agentcount = athleteArr[1].count;
+           teamcount = athleteArr[2].count;
+       }
+
        function erorrCB() {
 
        }
+        google.charts.load("current", {
+            packages: ["corechart", "geochart"]
+        });
+        google.charts.setOnLoadCallback(init);
 
-        google.charts.load("current", { packages: ["corechart"] });
-        google.charts.setOnLoadCallback(drawChart);
+        function init() {
+            drawLine();
+            drawChart();
+            drawCountChart();
+        }
+
         function drawChart() {
-            var data = google.visualization.arrayToDataTable([
+            var dataPie = google.visualization.arrayToDataTable([
               ['Sport', 'Athletes Registered'],
               ['Soccer', parseInt(soccerCount)],
               ['BasketBall', parseInt(basketBallCount)],
             ['HandBall', parseInt(handBallCount)]
             ]);
 
-            var options = {
+            var optionsPie = {
                 title: 'Athletes Registered',
                 pieHole: 0.4,
             };
 
-            var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
-            chart.draw(data, options);
+            var chartPie = new google.visualization.PieChart(document.getElementById('donutchart'));
+            chartPie.draw(dataPie, optionsPie);
         }
-        $(document).ready(function () {
-            $("#loginBtn").click(function () {
-                wireLoginPage();
-            });
-        });
 
+        function drawLine() {
+            var data1 = google.visualization.arrayToDataTable([
+            ['City', 'Population', 'Area'],
+            ['Haifa', 2761477, 1285.31],
+            ['Tel Aviv', 1324110, 181.76]
+            ]);
+            var options1 = {
+                region: 'IL',
+                displayMode: 'markers',
+                colorAxis: { colors: ['green', 'blue'] }
+            };
+            var chart1 = new google.visualization.GeoChart(document.getElementById('chart_div'));
+            chart1.draw(data1, options1);
+        }
+      function drawCountChart(){
+          var data = google.visualization.arrayToDataTable([
+          ['User Type', 'Count'],
+          ['Athletes', parseInt(athletecount)],
+          ['Agents', parseInt(agentcount)],
+          ['Teams', parseInt(teamcount)]
+          ]);
+
+          var options = {
+              title: 'Users Types'
+          };
+
+          var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+          chart.draw(data, options);
+        }
 
     </script>
 </head>
@@ -76,40 +131,19 @@
           type='text/css'>
     <!--Font Awesome-->
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-    <div class="bootshape login-form">
-        <div class="col-sm-6 col-md-5 col-lg-4 col-sm-offset-2 text-center login-popup-wrap">
-            <div class="login-popup">
-                <h1 class="title"><strong>ScoutMe</strong></h1>
+    <table>
+        <tr>
+            <td><div id="donutchart" style="width: 700px; height: 300px;"></div>
+            </td>
+            <td>
+                <div id="chart_div" style="width: 700px; height: 300px;"></div>
+            </td>
+            <td>
+                <div id="piechart" style="width: 700px; height: 300px;"></div>
+            </td>
+        </tr>
+    </table>
 
-                <div class="form-group">
-                    <input type="text" class="form-control text-center text" id="userName" placeholder="Email">
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-control text-center text" id="password" placeholder="Password">
-                </div>
-                <div class="form-group">
-                    <input type="radio" name="type" value="Athlete" checked="checked" />Athlete
-                    <input type="radio" name="type" value="Agent" />Agent
-                    <input type="radio" name="type" value="Team" />Team
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-default submit" id="loginBtn">Sign In</button>
-                </div>
-
-                <div class="divider"></div>
-                <div class="divider-label"></div>
-
-                <div>
-                    <a href="forgot.html">FORGOT PASSWORD?</a>
-                </div>
-                <div>
-                    <a href="signup.html">NOT A MEMBER YET?</a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-    <div id="donutchart" style="width: 900px; height: 500px;"></div>
 
 </body>
 </html>

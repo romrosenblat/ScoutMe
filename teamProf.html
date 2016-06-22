@@ -3,44 +3,116 @@
 
 <head>
 
+    <title>Agent Profile</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <title>Agent Profile</title>
-
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Custom CSS -->
     <link href="css/portfolio-item.css" rel="stylesheet">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="js/scoutCalls.js"></script>
     <script src="js/ajaxCalls.js"></script>
+    <script src="js/scoutCalls.js"></script>
+    <script src="js/jquery.js"></script>
+    <link href="js/jquery-ui.css" rel="stylesheet" />
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/jquery1.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <!--<link rel="stylesheet" href="/resources/demos/style.css">-->
     <link href="css/athcss.css" rel="stylesheet" />
-    <script>
+    <script type="text/javascript">
         $(document).ready(function () {
             writeTeam();
 
             $("#teamEditBTN").click(function () {
                 window.location = "TeamEditDetails.html";
             })
+            SearchAth(searchSuccess, errorCB)
+            function searchSuccess(resutls) {
+                athleteList = $.parseJSON(resutls.d);
+                namesonly = [];
+                var temparr;
+                for (var i = 0; i < athleteList.length; i++) {
+                    namesonly.push(athleteList[i].First_name + ' ' + athleteList[i].Last_name)
+                }
+                $("#inputName").autocomplete({
+                    source: namesonly
+                });
+            }
+            $('#inputName').on('autocompleteselect', function (e, ui) {
+                var name = ui.item.value;
+                for (var i = 0; i < athleteList.length; i++) {
+                    if (name == athleteList[i].First_name + ' ' + athleteList[i].Last_name) {
+                        alert(name);
+                    }
+                }
+            });
+
+            ShowFeed();
+
+
+            $("#athEditBTN").click(function () {
+                window.location = "AtEditDetailsPage.html";
+            });
+
+            $("#getVideoPage").click(function () {
+                window.location = "Videos.html";
+            });
+
+            $("#getStatPage").click(function () {
+                window.location = "AthStats.html";
+            });
+
+
+            $("#agEditBTN").click(function () {
+                window.location = "AgEditDetails.html";
+            })
         });
+
+        function ShowFeed() {
+            var request = {
+                //_athleteID : localStorage.Id
+                _athleteID: 25//only for testing, remove after integration
+            }
+            ShowFeedAjax(request, ShowFeedSuccess, errorCB)
+        };
+
+        function ShowFeedAjax(request, successFeed, errorCB2) {
+
+            var dataString = JSON.stringify(request);
+
+            $.ajax({ // ajax call starts
+                url: 'WebService.asmx/GetFeed',   // server side web service method
+                data: dataString,                          // the parameters sent to the server
+                type: 'POST',                              // can be also GET
+                dataType: 'json',                          // expecting JSON datatype from the server
+                contentType: 'application/json; charset = utf-8', // sent to the server
+                success: successFeed,                // data.d id the Variable data contains the data we get from serverside
+                error: errorCB2
+            }) // end of ajax call
+        }
+        function ShowFeedSuccess(data) {
+            if (data != "") {
+                var feedArr = JSON.parse(data.d);
+                for (var i = 0; i < feedArr.length; i++) {
+                    $("#feedHead").append('<div class="panel-heading">' + feedArr[i].name + '</div>'
+                        + '<div class="panel-body">' + feedArr[i].description + '</div>');
+                }
+            } else {
+                $('#feedHead').append("Error in Feed,please refresh the page");
+            }
+        }
+
+        function errorCB() {
+            alert();
+        }
     </script>
 
 </head>
@@ -82,23 +154,28 @@
         <!-- Portfolio Item Heading -->
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header" id="Team">
-                    Agent name
-
-                </h1>
+                <div class="ui-widget">
+                    <label for="inputName">Search Athletes By Name: </label>
+                    <input id="inputName">
+                </div>
             </div>
         </div>
         <!-- /.row -->
         <!-- Portfolio Item Row -->
         <div class="row">
-
-            <div class="col-md-8">
-                <img class="img-responsive" src="http://placehold.it/750x500" alt="">
+            <div class="container col-md-8">
+                <h2>Live Feed</h2>
+                <div class="panel panel-primary" id="feedHead">
+                </div>
             </div>
 
             <div class="col-sm-2 sidenav">
                 <h4>About</h4>
                 <table>
+                    <tr>
+                        <td><h4>Team: </h4></td>
+                        <td><span class="label label-default" id="Team">  </span></td>
+                    </tr>
                     <tr>
                         <td><h4>Name: </h4></td>
                         <td><span class="label label-default" id="ConName">  </span></td>
@@ -125,7 +202,7 @@
 
 
             </div>
-          
+
         </div>
         <!-- /.row -->
         <!-- Related Projects Row -->
@@ -175,11 +252,6 @@
 
     </div>
     <!-- /.container -->
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
 
 </body>
 
