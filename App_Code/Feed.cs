@@ -107,7 +107,7 @@ public class Feed
 
     }
 
-    public DataTable GetLiveFeed(int athleteID)
+    public DataTable GetLiveFeed()
     {
         DataSet ds = new DataSet();
         DataTable dt = new DataTable();
@@ -117,9 +117,6 @@ public class Feed
         {
             SqlCommand cmd = new SqlCommand("sp_getLast_Games", con);
             cmd.CommandType = CommandType.StoredProcedure;
-            SqlParameter paramAthleteID = new SqlParameter("@athleteID", athleteID);
-            cmd.Parameters.Add(paramAthleteID);
-
             try
             {
                 SqlDataAdapter adptr = new SqlDataAdapter(cmd);

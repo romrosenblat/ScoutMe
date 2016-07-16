@@ -28,85 +28,50 @@
     <script type="text/javascript">
         $(document).ready(function () {
             writeAthlete();
-            SearchAth(searchSuccess, errorCB)
-            function searchSuccess(resutls) {
-                athleteList = $.parseJSON(resutls.d);
-                namesonly = [];
-                var temparr;
-                for (var i = 0; i < athleteList.length; i++) {
-                    namesonly.push(athleteList[i].First_name + ' ' + athleteList[i].Last_name)
-                }
-                $("#inputName").autocomplete({
-                    source: namesonly
-                });
-            }
+            SearchAth(searchSuccess, errorCB);
+            ShowFeed();
             $('#inputName').on('autocompleteselect', function (e, ui) {
                 var name = ui.item.value;
                 for (var i = 0; i < athleteList.length; i++) {
                     if (name == athleteList[i].First_name + ' ' + athleteList[i].Last_name) {
-                        alert(name);
+                        if (athleteList[i].Id != 0) {
+                            localStorage.Id_temp = athleteList[i].Id;
+                            localStorage.pass_temp = athleteList[i].Password;
+                            localStorage.firstName_temp = athleteList[i].First_name;
+                            localStorage.lastName_temp = athleteList[i].Last_name;
+                            localStorage.sportID_temp = athleteList[i].SportID;
+                            localStorage.dob_temp = athleteList[i].Dob;
+                            localStorage.phone_temp = athleteList[i].Phone;
+                            localStorage.Email_temp = athleteList[i].Email;
+                            localStorage.hight_temp = athleteList[i].Hight
+                            localStorage.weight_temp = athleteList[i].Weight;
+                            localStorage.city_temp = athleteList[i].City;
+                            localStorage.agentName_temp = athleteList[i].AgentName;
+                            localStorage.teamName_temp = athleteList[i].TeamName;
+                            localStorage.isGolaey_temp = athleteList[i].IsGoaley;
+                            localStorage.sex_temp = athleteList[i].Sex;
+                            window.location = "lookAth.html";
+                        }
                     }
                 }
             });
 
-            ShowFeed();
+                $("#athEditBTN").click(function () {
+                    window.location = "AtEditDetailsPage.html";
+                });
 
-            $("#athEditBTN").click(function () {
-                window.location = "AtEditDetailsPage.html";
+                $("#getVideoPage").click(function () {
+                    window.location = "Videos.html";
+                });
+
+                $("#getStatPage").click(function () {
+                    window.location = "AthStats.html";
+                });
             });
+</script>
+    <style>
 
-            $("#getVideoPage").click(function () {
-                window.location = "Videos.html";
-            });
-
-            $("#getStatPage").click(function () {
-                window.location = "AthStats.html";
-            });
-
-
-        });
-
-        function ShowFeed() {
-            var request = {
-                //_athleteID : localStorage.Id
-                _athleteID: 25//only for testing, remove after integration
-            }
-            ShowFeedAjax(request, ShowFeedSuccess, errorCB)
-        };
-
-        function ShowFeedAjax(request, successFeed, errorCB2) {
-
-            var dataString = JSON.stringify(request);
-
-            $.ajax({ // ajax call starts
-                url: 'WebService.asmx/GetFeed',   // server side web service method
-                data: dataString,                          // the parameters sent to the server
-                type: 'POST',                              // can be also GET
-                dataType: 'json',                          // expecting JSON datatype from the server
-                contentType: 'application/json; charset = utf-8', // sent to the server
-                success: successFeed,                // data.d id the Variable data contains the data we get from serverside
-                error: errorCB2
-            }) // end of ajax call
-        }
-
-        function ShowFeedSuccess(data) {
-            if (data != "") {
-                var feedArr = JSON.parse(data.d);
-                for (var i = 0; i < feedArr.length; i++) {
-                    $("#feedHead").append('<div class="panel-heading">' + feedArr[i].name + '</div>'
-                        + '<div class="panel-body">' + feedArr[i].description + '</div>');
-                }
-            } else {
-                $('#feedHead').append("Error in Feed,please refresh the page");
-            }
-        }
-
-        function errorCB() {
-            alert();
-        }
-
-
-    </script>
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -142,6 +107,7 @@
         <!-- Portfolio Item Heading -->
         <div class="row">
             <table>
+                
                 <tr>
                     <!--<td><span class="label label-default" id="TopAtName">  </span></td>-->
                     <td>
@@ -157,6 +123,8 @@
             <div class="container col-md-8">
                 <h2>Live Feed</h2>
                 <div class="panel panel-primary" id="feedHead">
+                   
+                    
                 </div>
             </div>
 

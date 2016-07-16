@@ -484,11 +484,10 @@ public class WebService : System.Web.Services.WebService
 
     [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
     [WebMethod]
-    public string GetFeed(int _athleteID)
-       
+    public string GetFeed()
     {
         Feed feed = new Feed();
-        return DataTableToJsonObj(feed.GetLiveFeed(_athleteID));
+        return DataTableToJsonObj(feed.GetLiveFeed());
     }
 
     [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
@@ -500,6 +499,23 @@ public class WebService : System.Web.Services.WebService
         return DataTableToJsonObj(ath.GetAthCount());
     }
 
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    [WebMethod]
+    public string GetCitiesCount()
+
+    {
+        Athlete ath = new Athlete();
+        return DataTableToJsonObj(ath.GetCityCount());
+    }
+
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    [WebMethod]
+    public string UsersCount()
+
+    {
+        Athlete ath = new Athlete();
+        return DataTableToJsonObj(ath.GetUsersCount());
+    }
 
     public string DataTableToJsonObj(DataTable dt)
     {

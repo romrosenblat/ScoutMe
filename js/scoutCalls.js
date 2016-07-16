@@ -26,7 +26,7 @@ function wireLoginPage() {
         case "Agent":
             AgentAuthenticate(request, s2, errorCB2);
             break;
-        case "Team":
+        case "Scout":
             TeamAuthenticate(request, s3, errorCB2);
             break;
 
@@ -122,6 +122,28 @@ function writeAthlete() {
     $("#phone").text(localStorage.phone);
     $("#email").text(localStorage.Email);
     $("#agent").text(localStorage.agentName);
+}
+
+function writeProfTemp() {
+    $("#TopAtName").text(localStorage.firstName_temp + " " + localStorage.lastName_temp);
+    $("#name").text(localStorage.firstName_temp + " " + localStorage.lastName_temp);
+    $("#sex").text(localStorage.sex_temp);
+    if (localStorage.sportID_temp == "1") {
+        $("#sport").text("Soccer")
+    }
+    if (localStorage.sportID_temp == "2") {
+        $("#sport").text("Basketball")
+    }
+    if (localStorage.sportID_temp == "3") {
+        $("#sport").text("Handball")
+    }
+    $("#height").text(localStorage.hight_temp);
+    $("#weight").text(localStorage.weight_temp);
+    $("#city").text(localStorage.city_temp);
+    $("#team").text(localStorage.teamName_temp);
+    $("#phone").text(localStorage.phone_temp);
+    $("#email").text(localStorage.Email_temp);
+    $("#agent").text(localStorage.agentName_temp);
 }
 
 function s2(results) {
@@ -613,27 +635,34 @@ function successVideoInsert() {
     window.location = "Videos.html";
 }
 
-function GetVid() {
-    var request = {
-        athleteID: localStorage.Id,
+function GetVid(look) {
+    if (look == 0) {
+        var request = {
+            athleteID: localStorage.Id
+        }
+    } else {
+        var request = {
+            athleteID: localStorage.Id_temp
+        }
     }
+    
+    videoflag = true;
     GetAthleteVideo(request, successGetVideo, errorCB2);
 
 }
 
 function successGetVideo(results) {
-    var userObj = JSON.parse(results.d);
-    for (var i = 0; i < userObj.length; i++) {
-        $("#tableBody").append(" \
-        <tr> \
-         <td>" + userObj[i].Descripition + "</td> \
-          <td><a href=" + userObj[i].VideoURL + " target='blank'>Link</a></td> \
-                </tr> \
-                            ");
-
-
+    if (videoflag) {
+        var userObj = JSON.parse(results.d);
+        for (var i = 0; i < userObj.length; i++) {
+            temp = userObj[i].VideoURL.split("/");
+            youtubeID = temp[temp.length - 1].split("=");
+            one = '<a href="' + userObj[i].VideoURL + '" data-toggle="lightbox" data-gallery="youtubevideos" class="col-sm-4">'
+         + '<img src="//i1.ytimg.com/vi/' + youtubeID[1] + '/mqdefault.jpg" class="img-responsive"></a>';
+            $("#videosDis").append(one);
+        }
+        videoflag = false;
     }
-
 }
 
 
@@ -648,4 +677,50 @@ function errorCB2(e) {
 function GetMyTeamName()
 {
     return localStorage.teamName;
+}
+
+function searchSuccess(resutls) {
+    athleteList = $.parseJSON(resutls.d);
+    namesonly = [];
+    var temparr;
+    for (var i = 0; i < athleteList.length; i++) {
+        namesonly.push(athleteList[i].First_name + ' ' + athleteList[i].Last_name)
+    }
+    $("#inputName").autocomplete({
+        source: namesonly
+    });
+}
+
+function ShowFeed() {
+    ShowFeedAjax(ShowFeedSuccess, errorCB)
+}
+function ShowFeedAjax(ShowFeedSuccess, errorCB) {
+
+
+    $.ajax({ // ajax call starts
+        url: 'WebService.asmx/GetFeed',   // server side web service method
+        type: 'POST',                              // can be also GET
+        dataType: 'json',                          // expecting JSON datatype from the server
+        contentType: 'application/json; charset = utf-8', // sent to the server
+        success: ShowFeedSuccess,                // data.d id the Variable data contains the data we get from serverside
+        error: errorCB2
+    }) // end of ajax call
+}
+function ShowFeedSuccess(data) {
+    if (data != "") {
+        var feedArr = JSON.parse(data.d);
+        for (var i = 0; i < feedArr.length; i++) {
+            if (feedArr[i].youtube != "") {
+                youtubeLink = feedArr[i].youtube;
+                $("#feedHead").append('<div class="panel-heading">' + feedArr[i].name + '</div>'
+                + '<div class="panel-body">' + feedArr[i].description + '  ,<a href="' + youtubeLink +
+                '" target="_blank">YouTube Link</a></div>');
+            } else {
+                $("#feedHead").append('<div class="panel-heading">' + feedArr[i].name + '</div>'
+                + '<div class="panel-body">' + feedArr[i].description + '</div>');
+            }
+        }
+    } else {
+        $('#feedHead').append("Error in Feed,please refresh the page");
+    }
 }

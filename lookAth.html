@@ -26,11 +26,45 @@
     <!--<link rel="stylesheet" href="/resources/demos/style.css">-->
     <link href="css/athcss.css" rel="stylesheet" />
     <script type="text/javascript">
+        $(document).ready(function () {
+            $("#VideoPageLook").click(function () {
+                window.location = "videoLook.html";
+            });
 
+            $("#getStatPage").click(function () {
+                window.location = "AthStats.html";
+            });
 
+            writeProfTemp();
+            SearchAth(searchSuccess, errorCB);
+            $('#inputName').on('autocompleteselect', function (e, ui) {
+                var name = ui.item.value;
+                for (var i = 0; i < athleteList.length; i++) {
+                    if (name == athleteList[i].First_name + ' ' + athleteList[i].Last_name) {
+                        if (athleteList[i].Id != 0) {
+                            localStorage.Id_temp = athleteList[i].Id;
+                            localStorage.pass_temp = athleteList[i].Password;
+                            localStorage.firstName_temp = athleteList[i].First_name;
+                            localStorage.lastName_temp = athleteList[i].Last_name;
+                            localStorage.sportID_temp = athleteList[i].SportID;
+                            localStorage.dob_temp = athleteList[i].Dob;
+                            localStorage.phone_temp = athleteList[i].Phone;
+                            localStorage.Email_temp = athleteList[i].Email;
+                            localStorage.hight_temp = athleteList[i].Hight
+                            localStorage.weight_temp = athleteList[i].Weight;
+                            localStorage.city_temp = athleteList[i].City;
+                            localStorage.agentName_temp = athleteList[i].AgentName;
+                            localStorage.teamName_temp = athleteList[i].TeamName;
+                            localStorage.isGolaey_temp = athleteList[i].IsGoaley;
+                            localStorage.sex_temp = athleteList[i].Sex;
+                            window.location = "lookAth.html";
+                        }
+                    }
+                }
+            });
+        });
     </script>
 </head>
-
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -127,7 +161,7 @@
 
             <div class="col-sm-3 col-xs-6" style="float:right">
                 <a href="#">
-                    <img class="img-responsive portfolio-item" src="img/videosf.jpg" alt="" id="getVideoPage">
+                    <img class="img-responsive portfolio-item" src="img/videosf.jpg" alt="" id="VideoPageLook">
                 </a>
             </div>
 

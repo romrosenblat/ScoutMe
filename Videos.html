@@ -13,7 +13,7 @@
     <script src="js/scoutCalls.js"></script>
     <script>
          $(document).ready(function () {
-             GetVid();
+             GetVid(0);
              $("#btnAdd").click(function () {
                  Mdesc = $("#Mdesc").val();
                  Mdate = $("#datepicker").val();
@@ -23,15 +23,11 @@
              $("#home").click(function () {
                  typecheck();
              })
-        });
+         });
 
         $(function () {
             $("#datepicker").datepicker();
         });
-    
-     
-
-      
     </script>
 </head>
 <body>
@@ -68,18 +64,14 @@
     <div class="container" style="margin-top:50px">
         <h3>My Video Gallery</h3>
     </div>
-
     <div class="container">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <td>Match Description</td>
-                    <td>Youtube Link</td>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
+    <div class="row">
+        <div class="col-md-offset-1 col-md-10">
+            <div class="row" id="videosDis">
+            </div>
+        </div>
     </div>
+        </div>
 
 
     <div class="container">
@@ -113,7 +105,62 @@
         </div>
     </div>
 
+    <!--<script src="//code.jquery.com/jquery.js"></script>-->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/4.0.1/ekko-lightbox.min.js"></script>
+    <script type="text/javascript">
+			$(document).ready(function ($) {
+			    GetVid();
+				$(document).delegate('*[data-toggle="lightbox"]:not([data-gallery="navigateTo"])', 'click', function(event) {
+					event.preventDefault();
+					return $(this).ekkoLightbox({
+						onShown: function() {
+							if (window.console) {
+								return console.log('onShown event fired');
+							}
+						},
+						onContentLoaded: function() {
+							if (window.console) {
+								return console.log('onContentLoaded event fired');
+							}
+						},
+						onNavigate: function(direction, itemIndex) {
+							if (window.console) {
+								return console.log('Navigating '+direction+'. Current item: '+itemIndex);
+							}
+						}
+					});
+				});
 
+				//Programatically call
+				$('#open-image').click(function (e) {
+					e.preventDefault();
+					$(this).ekkoLightbox();
+				});
+				$('#open-youtube').click(function (e) {
+					e.preventDefault();
+					$(this).ekkoLightbox();
+				});
+
+				$(document).delegate('*[data-gallery="navigateTo"]', 'click', function(event) {
+					event.preventDefault();
+					return $(this).ekkoLightbox({
+						onShown: function() {
+							var lb = this;
+							$(lb.modal_content).on('click', '.modal-footer a#jumpit', function(e) {
+								e.preventDefault();
+								lb.navigateTo(2);
+							});
+							$(lb.modal_content).on('click', '.modal-footer a#closeit', function(e) {
+								e.preventDefault();
+								lb.close();
+							});
+						}
+					});
+				});
+
+			});
+    </script>
 
 </body>
 </html>
