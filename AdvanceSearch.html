@@ -24,10 +24,10 @@
     <script src="switch-Bootstrap/js/bootstrap.min.js"></script>
 
     <script>
-        weightMinmum = 155;//sets defult values if the user will not move the slider
+        weightMinmum = 25;//sets defult values if the user will not move the slider
         weightMaximum = 190;
-        hightMinmum = 120;
-        hightMaximun = 190;
+        hightMinmum = 50;
+        hightMaximun = 290;
 
   $(function() {
       $("#slider-hight").slider({
@@ -39,13 +39,14 @@
           $("#hightAmount").val("cm " + ui.values[0] + " - cm " + ui.values[1]);
       },
       stop: function (even, ui) {
-          weightMinmum = ui.values[0];
-          weightMaximum = ui.values[1];
+          hightMinmum = ui.values[0];
+          hightMaximun = ui.values[1];
       }
 
       });
       $("#hightAmount").val("cm " + $("#slider-hight").slider("values", 0) +
      " - cm " + $("#slider-hight").slider("values", 1));
+      //end height slider
       $("#slider-weight").slider({
           range: true,
           min: 0,
@@ -55,13 +56,14 @@
               $("#weightAmount").val("kg " + ui.values[0] + " - kg " + ui.values[1]);
           },
           stop: function (event, ui) {
-              hightMinmum = ui.values[0];
-              hightMaximun = ui.values[1];
+              //weightMinmum = ui.values[0];
+              //weightMaximum = ui.values[1];
           }
       });
      
       $("#weightAmount").val("kg " + $("#slider-weight").slider("values", 0) +
 " - kg " + $("#slider-weight").slider("values", 1));
+      //end of weight slider
 
       $("#slider-goles_handBall").slider({//goles slider handBall
           range: true,
@@ -83,8 +85,8 @@
       $("#slider-goales_soccer").slider({//goles slider soccer
           range: true,
           min: 0,
-          max: 500,
-          values: [1, 55],
+          max: 200,
+          values: [1, 25],
           slide: function (event, ui) {
               $("#goalesAmount_soccer").val(ui.values[0] + " - " + ui.values[1]);
           },
@@ -100,8 +102,8 @@
       $("#slider-shots").slider({//shots slider
           range: true,
           min: 0,
-          max: 500,
-          values: [1, 55],
+          max: 200,
+          values: [1, 25],
           slide: function (event, ui) {
               $("#shotsAmount").val(ui.values[0] + " - " + ui.values[1]);
           },
@@ -226,7 +228,7 @@
               _shotsMax: shotsMaximun
           }
 
-          AdvanceSearchHandBall(request, AdvanceSearchHandBallSuccess, erorrCB);
+          AdvanceSearchHandBall(request, AdvanceSearcSuccess, erorrCB);
       })
 
       $("#click_soccer").click(function () {//when soccer form submitted
@@ -249,10 +251,10 @@
               _assitsMax: assitsMaximun
           }
 
-          AdvanceSearchSoccer(request, AdvanceSearchSoccerSuccess, erorrCB);
+          AdvanceSearchSoccer(request, AdvanceSearcSuccess, erorrCB);
       })
 
-        $("#click_soccer").click(function () {//when soccer form submitted
+      $("#click_basketBall").click(function () {//when basketball form submitted
       $("#listAth").empty();
       if (document.getElementById("sex").checked == false) {
           athSex = "male";
@@ -266,17 +268,19 @@
           weightMin: weightMinmum,
           wegithMax: weightMaximum,
           sex: athSex,
-          _goalsMin: golesMinmum,
-          _goalsMax: golesMaximun,
+          _pointsMin: pointsMinmum,
+          _pointsMax: pointsMaximun,
           _assitsMin: assitsMinmum,
-          _assitsMax: assitsMaximun
+          _assitsMax: assitsMaximun,
+          _reboundMin: reboundMinmum,
+          _reboundMax: reboundMaximun
       }
 
-      AdvanceSearchSoccer(request, AdvanceSearchSoccerSuccess, erorrCB);
+      AdvanceSearchBasketBall(request, AdvanceSearcSuccess, erorrCB);
   })     
   });
 
-  function AdvanceSearchHandBall(request, AdvanceSearchHandBallSuccess, erorrCB) {
+  function AdvanceSearchHandBall(request, AdvanceSearcSuccess, erorrCB) {
 
       var dataString = JSON.stringify(request);
 
@@ -286,21 +290,13 @@
           type: 'POST',                              // can be also GET
           dataType: 'json',                          // expecting JSON datatype from the server
           contentType: 'application/json; charset = utf-8', // sent to the server
-          success: AdvanceSearchHandBallSuccess,                // data.d id the Variable data contains the data we get from serverside
+          success: AdvanceSearcSuccess,                // data.d id the Variable data contains the data we get from serverside
           error: erorrCB
       }) // end of ajax call
   }
 
-  function AdvanceSearchHandBallSuccess(data) {
-      if (data !="") {
-          var athleteArr = JSON.parse(data.d);
-          for (var i = 0; i < athleteArr.length; i++) {
-              $("#listAth").append('<a href="#" class="list-group-item">' + athleteArr[i].first_name + ' ' + athleteArr[i].last_name + '</a>');
-          }
-      }
-  }
  
-  function AdvanceSearchSoccer(request, AdvanceSearchSoccerSuccess, erorrCB) {
+  function AdvanceSearchSoccer(request, AdvanceSearcSuccess, erorrCB) {
 
       var dataString = JSON.stringify(request);
 
@@ -310,19 +306,67 @@
           type: 'POST',                              // can be also GET
           dataType: 'json',                          // expecting JSON datatype from the server
           contentType: 'application/json; charset = utf-8', // sent to the server
-          success: AdvanceSearchSoccerSuccess,                // data.d id the Variable data contains the data we get from serverside
+          success: AdvanceSearcSuccess,                // data.d id the Variable data contains the data we get from serverside
           error: erorrCB
       }) // end of ajax call
   }
 
-  function AdvanceSearchSoccerSuccess(data) {
+  function AdvanceSearchBasketBall(request, AdvanceSearcSuccess, erorrCB) {
+
+      var dataString = JSON.stringify(request);
+
+      $.ajax({ // ajax call starts
+          url: 'WebService.asmx/AdvanceSearch_BasketBall',   // server side web service method
+          data: dataString,                          // the parameters sent to the server
+          type: 'POST',                              // can be also GET
+          dataType: 'json',                          // expecting JSON datatype from the server
+          contentType: 'application/json; charset = utf-8', // sent to the server
+          success: AdvanceSearcSuccess,                // data.d id the Variable data contains the data we get from serverside
+          error: erorrCB
+      }) // end of ajax call
+  }
+
+  function AdvanceSearcSuccess(data) {
       if (data !="") {
-          var athleteArr = JSON.parse(data.d);
+           athleteArr = JSON.parse(data.d);
           for (var i = 0; i < athleteArr.length; i++) {
-              $("#listAth").append('<a href="#" class="list-group-item">' + athleteArr[i].first_name + ' ' + athleteArr[i].last_name + '</a>');
+              $("#listAth").append('<a href="#" class="list-group-item active">Results:</a><a href="#" class="list-group-item"> ' + athleteArr[i].first_name + ' ' + athleteArr[i].last_name + '</a>');
+             
           }
       }
+      $(document).on('click', '.list-group', function (ui) {
+          //var name = ui.view.athleteArr[0].first_name + ' ' + ui.view.athleteArr[0].last_name;
+          var items = document.getElementsByClassName("list-group-item");
+          selectedName = items[1].innerText;
+
+          //for (var i = 0; i < items.length; i++) {
+          //    if ((' ' + items[i].className + ' ').indexOf(' active ') > -1)
+          //        selectedName =  items[1].innerText;
+          //}
+          for (var i = 0; i < athleteArr.length; i++) {
+              if (selectedName == athleteArr[i].first_name + ' ' + athleteArr[i].last_name) {
+                  if (athleteArr[i].Id != 0) {
+                      localStorage.Id_temp = athleteArr[i].athleteID;
+                      localStorage.firstName_temp = athleteArr[i].first_name;
+                      localStorage.lastName_temp = athleteArr[i].last_name;
+                      localStorage.sportID_temp = athleteArr[i].sportID;
+                      localStorage.dob_temp = athleteArr[i].date_of_birth;
+                      localStorage.phone_temp = athleteArr[i].phone;
+                      localStorage.Email_temp = athleteArr[i].eMail;
+                      localStorage.hight_temp = athleteArr[i].hight
+                      localStorage.weight_temp = athleteArr[i].weight;
+                      localStorage.city_temp = athleteArr[i].city;
+                      localStorage.agentName_temp = athleteArr[i].agentName;
+                      localStorage.teamName_temp = athleteArr[i].teamName;
+                      localStorage.isGolaey_temp = athleteArr[i].ssGoaley;
+                      localStorage.sex_temp = athleteArr[i].sex;
+                      window.location = "lookAth.html";
+                  }
+              }
+          }
+      });
   }
+  
 
   function erorrCB() {
       alert("bad");
@@ -337,13 +381,13 @@
     <div class="col-md-8">
         <div class="btn-group" data-toggle="buttons">
             <!--<label class="btn btn-primary active">-->
-                <input type="radio" name="options" id="soccerBTN" value="Soccer" checked>Soccer
+            <input type="radio" name="options" id="soccerBTN" value="Soccer" checked>Soccer
             <!--</label>-->
             <!--<label class="btn btn-primary">-->
-                <input type="radio" name="options" id="basketBTN" value="BasketBall">BasketBall
+            <input type="radio" name="options" id="basketBTN" value="BasketBall">BasketBall
             <!--</label>-->
             <!--<label class="btn btn-primary">-->
-                <input type="radio" name="options" id="handBTN" value="HandBall">HandBall
+            <input type="radio" name="options" id="handBTN" value="HandBall">HandBall
             <!--</label>-->
         </div>
         <table>
@@ -377,11 +421,12 @@
                     </div>
                 </td>
             </tr>
-            </table>
-</div>
-    
-    <div id="handDiv"><!--HandBAll sliders-->
-           <table>
+        </table>
+    </div>
+
+    <div id="handDiv">
+        <!--HandBAll sliders-->
+        <table>
             <tr>
                 <td>
                     <p>
@@ -400,17 +445,19 @@
                     <div id="slider-shots"></div>
                 </td>
             </tr>
-               <tr>
-                   <td>
-                       <button id="click_handBall">Submit</button>
-                   </td>
-               </tr>
+            <tr>
+                <td>
+                    <button id="click_handBall">Submit</button>
+                </td>
+            </tr>
         </table>
 
     </div>
-    <div id="basketBallDiv"><!--BasketBall sliders-->
+    <div id="basketBallDiv">
+        <!--BasketBall sliders-->
         <table>
-            <tr><!--points sliders-->
+            <tr>
+                <!--points sliders-->
                 <td>
                     <p>
                         <label for="amount">Points range:</label>
@@ -460,14 +507,14 @@
                 </td>
             </tr>
             <tr>
-            <!--assits sliders-->
-            <td>
-                <p>
-                    <label for="amount">Assits range:</label>
-                    <input type="text" id="assitsAmount_soccer" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                </p>
-                <div id="slider-assits_soccer"></div>
-            </td>
+                <!--assits sliders-->
+                <td>
+                    <p>
+                        <label for="amount">Assits range:</label>
+                        <input type="text" id="assitsAmount_soccer" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                    </p>
+                    <div id="slider-assits_soccer"></div>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -477,8 +524,19 @@
         </table>
 
     </div>
-    <div class="list-group" id="listAth">
-
+    <div class="row">
+        <div class="container col-md-8">
+            <div class="list-group" id="listAth">
+               
+            </div>
+        </div>
     </div>
+    <!--<div class="row">
+        <div class="container col-md-8">
+            <h2>Results : </h2>
+            <div class="panel panel-primary" id="listAth">
+            </div>
+        </div>
+    </div>-->
 </body>
 </html>

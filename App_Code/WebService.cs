@@ -469,7 +469,7 @@ public class WebService : System.Web.Services.WebService
         int _goalsMin, int _goalsMax, int _shotsMin, int _shotsMax)
     {
         Athlete ath = new Athlete();
-        return DataTableToJsonObj(ath.AdvanceSearch_HandBall(hightMax, hightMin, weightMin, wegithMax, sex, _goalsMin, _goalsMax, _shotsMin,_shotsMax));
+        return DataTableToJsonObj(ath.AdvanceSearchHandBall(hightMax, hightMin, weightMin, wegithMax, sex, _goalsMin, _goalsMax, _shotsMin,_shotsMax));
     }
 
 

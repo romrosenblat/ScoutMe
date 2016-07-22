@@ -28,6 +28,10 @@
     <link href='http://pics.cssbakery.com/pics/css/verticalbargraph.css' rel='stylesheet'
           type='text/css' />
     <script>
+        $("#compare").click(function () {
+            window.location = "CompareMe.html";
+        });
+
         function DoSubmit() {
 
             var isFormValid = $('#myForm')[0].checkValidity();
@@ -42,6 +46,7 @@
                 BuildAndSendAthleteStats();
             }
         }
+
 
 
         function BuildAndSendAthleteStats() {
@@ -216,8 +221,6 @@
 
                 //build avg stats
                 $('#avgTable').empty();
-                $('#graph').empty();
-                $('#titles').empty();
 
                 for (var j = 0; j < tempArrayToStoreColumns.length; j++) {
                     //only if it's an int column show it
@@ -230,14 +233,8 @@
                         && tempColName != 'Date') {
                         var avg = tempValue / numberOfSamples;
                         var tempString = "<tr><td><b>" + tempColName + ": </b></td>";
-                        tempString += "<td>" + avg + "</td></tr>";
+                        tempString += "<td>" + Math.round(10 * avg) / 10 + "</td></tr>";
                         $('#avgTable').append(tempString);
-
-                        var graphstring = "<li class='bar1 purplebar' style='height:" + (avg * 2) + "px;'>" + avg + "</li> ";
-                        var title = "  <li>" + tempColName + "</li>";
-                        $('#graph').append(graphstring);
-                        $('#titles').append(title);
-
                     }
 
                 }
@@ -494,7 +491,7 @@
 
         </div>
     </div>
-
+    <button type="button" id="compare">compare</button>
     <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#viewavarage" style="position:relative;top:50%; left:38%;">View total avarage</button>
 
     <!-- Modal -->
@@ -510,16 +507,10 @@
                 <div class="modal-body">
                     <table id="avgTable" class=""></table>
                 </div>
-                <div id="bargraph" class="bargraph" style="width: 365px;">
-                    <ul id="graph" class="bars"></ul>
-                    <ul id="titles" class="label"></ul>
-                    <ul class="y-axis"><li>100</li><li>75</li><li>50</li><li>25</li><li>0</li></ul>
-                    <p class="centered">Yearly US Fruit Consumption in Tons</p>
-                </div>
-
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
+
             </div>
 
         </div>

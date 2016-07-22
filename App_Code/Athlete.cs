@@ -455,13 +455,13 @@ public class Athlete
 
             SqlParameter paramweightMin = new SqlParameter("@weight_start", weightMin);
             SqlParameter paramweightMax = new SqlParameter("@weight_end", weightMax);
-            SqlParameter paramhightMax = new SqlParameter("@hight_start", hightMax);
-            SqlParameter paramhightMin = new SqlParameter("@hight_end", hightMin);
+            SqlParameter paramhightMax = new SqlParameter("@hight_start",hightMin);
+            SqlParameter paramhightMin = new SqlParameter("@hight_end",hightMax);
             SqlParameter paramSex = new SqlParameter("@sex", sex);
-            SqlParameter parmaGoalsMin = new SqlParameter("@goals_start", goalsMin);
-            SqlParameter parmaGoalsMax = new SqlParameter("@goals_end", goalsMax);
-            SqlParameter parmaAssitsMin = new SqlParameter("@assists_start", assitsMin);
-            SqlParameter parmaAssitsMax = new SqlParameter("@assists_end", assitsMax);
+            SqlParameter parmaGoalsMin = new SqlParameter("@goals_start",goalsMin);
+            SqlParameter parmaGoalsMax = new SqlParameter("@goals_end",goalsMax);
+            SqlParameter parmaAssitsMin = new SqlParameter("@assists_start",assitsMin);
+            SqlParameter parmaAssitsMax = new SqlParameter("@assists_end",assitsMax);
 
 
             cmd.Parameters.Add(paramweightMin);
@@ -552,7 +552,7 @@ public class Athlete
         }
     }
 
-    public DataTable AdvanceSearch_HandBall(decimal hightMax, decimal hightMin, decimal weightMin, decimal weightMax, string sex,
+    public DataTable AdvanceSearchHandBall(decimal hightMax, decimal hightMin, decimal weightMin, decimal weightMax, string sex,
       int goalsMin, int goalsMax, int shotsMin, int shotsMax)
     {
         DataSet ds = new DataSet();
