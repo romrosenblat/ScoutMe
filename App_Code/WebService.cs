@@ -308,6 +308,16 @@ public class WebService : System.Web.Services.WebService
         return result;
     }
 
+    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+    [WebMethod]
+    public string SearchAthleteByType(int AthleteType, bool IsGoaly)
+    {
+        Athlete ath = new Athlete();
+        JavaScriptSerializer js = new JavaScriptSerializer();
+        string result = js.Serialize(ath.SearchAthleteByType(AthleteType, IsGoaly));
+        return result;
+    }
+
     public int GetSoccertats(int id, bool isGoaley)
     {
         DBservices dbs = new DBservices();

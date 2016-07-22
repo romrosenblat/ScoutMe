@@ -695,5 +695,18 @@ public class Athlete
             return null;
         }
     }
+    public List<Athlete> SearchAthleteByType(int AthleteType, bool IsGoaly)
+    {
+        var tempAllAthletes = SearchAthlete();
+        List<Athlete> result = new List<Athlete>();
+        foreach (var athlete in tempAllAthletes)
+        {
+            if (athlete.IsGoaley == IsGoaley
+                && athlete.SportID == AthleteType)
+                result.Add(athlete);
+        }
+        return result;
+
+    }
 
 }
