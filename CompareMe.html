@@ -1,0 +1,457 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <title></title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="css/portfolio-item.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="js/ajaxCalls.js"></script>
+    <script src="js/scoutCalls.js"></script>
+    <script src="js/jquery.js"></script>
+    <link href="js/jquery-ui.css" rel="stylesheet" />
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/jquery1.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <link href="css/athcss.css" rel="stylesheet" />
+    <link href='http://pics.cssbakery.com/pics/css/verticalbargraph.css' rel='stylesheet'
+          type='text/css' />
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <style>
+        /*#tr:nth-child(even) {
+            background-color: #c22f2f;
+        }
+
+        ; #tr:nth-child(odd) {
+            background-color: #5295d5;
+        }*/
+    </style>
+
+
+    <script type="text/javascript">
+
+
+
+        var tempAthleteId;
+        function GetInputAttributeById(elementId) {
+            return $("#" + elementId).val();
+        }
+        function FetchDataForUser(avgTableTame, athleteType, athleteId) {
+            var tempAvgTableTame, tempAthType, tempAthleteId, isMe;
+            if (avgTableTame) {
+                tempAvgTableTame = avgTableTame;
+                tempAthType = athleteType;
+                tempAthleteId = athleteId;
+                isMe = false;
+            }
+            else {
+                tempAvgTableTame = "avgTable";
+                tempAthType = GetAthleteType();
+                tempAthleteId = GetAthleteId();
+                isMe = true;
+            }
+            var statResults = "";
+            switch (tempAthType) {
+                case AthleteSportType.Soccer:
+                    GetSoccerStatsResult(tempAthleteId, function (data) {
+                        if (data != null)
+                            ContinueLoadingStats(data.d, tempAvgTableTame, isMe);
+                    });
+                    break;
+                case AthleteSportType.BasketBall:
+                    GetBasketballStatsResult(tempAthleteId, function (data) {
+                        if (data != null)
+                            ContinueLoadingStats(data.d, tempAvgTableTame, isMe);
+                    });
+                    break;
+                case AthleteSportType.HandBall:
+                    GetHanballStatsResult(tempAthleteId, function (data) {
+                        if (data != null)
+                            ContinueLoadingStats(data.d, tempAvgTableTame, isMe);
+                        //TODO - hanlde else
+                    });
+                    break;
+            }
+            //1. get from DB all stats for this user - ajax call
+
+        }
+
+        var meArrayToStoreColumnsForAvg = [];
+        var meArrayToStoreColumns = [];
+        var meStatsResults;
+        var otherArrayToStoreColumnsForAvg = [];
+        var otherArrayToStoreColumns = [];
+        var otherStatsResults;
+        var isInitialized = false;
+
+        function ContinueLoadingStats(statResults, avgTableName, isMe) {
+            var tempArrayToStoreColumnsForAvg;
+            var tempArrayToStoreColumns;
+            if (isMe) {
+                meStatsResults = statResults;
+                if (!isInitialized)
+                    isInitialized = true;
+                else
+                    return;
+
+                tempArrayToStoreColumnsForAvg = meArrayToStoreColumnsForAvg;
+                tempArrayToStoreColumns = meArrayToStoreColumns;
+            }
+            else {
+                otherStatsResults = statResults;
+                otherArrayToStoreColumnsForAvg = [];
+                otherArrayToStoreColumns = [];
+                tempArrayToStoreColumnsForAvg = otherArrayToStoreColumnsForAvg;
+                tempArrayToStoreColumns = otherArrayToStoreColumns;
+            }
+
+            //1.1 you need to send according soccer\handball\basketball.
+            //build th
+            var isGoaly = AthleteIsGoaly();
+            var athleteType = GetAthleteType();
+            $('#statsTable').empty();
+            if (statResults != null && statResults.length > 0) {
+                var th = '';
+                for (var col in statResults[0]) {
+                    //to ignore __type etc.
+                    if (col.indexOf('__') == -1 && DisplayColumn(isGoaly, athleteType, col)) {
+                        //all stats
+                        th += "<th>" + col + "</th>";
+                        tempArrayToStoreColumns.push(col);
+                    }
+                }
+            }
+
+            for (var j = 0; j < tempArrayToStoreColumns.length; j++) {
+                tempArrayToStoreColumnsForAvg[tempArrayToStoreColumns[j]] = 0;
+            }
+
+            for (var i = 0; i < statResults.length; i++) {
+                var tr = '';
+                for (var j = 0; j < tempArrayToStoreColumns.length; j++) {
+                    {
+                        //all stats
+                        var currentValue = statResults[i][tempArrayToStoreColumns[j]];
+                        if (tempArrayToStoreColumns[j] === "Date")
+                            currentValue = GetCleanDate(currentValue);
+                        tr += "<td>" + currentValue + "</td>";
+
+                        //for avg
+                        tempArrayToStoreColumnsForAvg[tempArrayToStoreColumns[j]] += currentValue;
+                    }
+                }
+            }
+
+            //build avg stats
+            $('#' + avgTableName).empty();
+            var dataChart = [];
+            for (var j = 0; j < tempArrayToStoreColumns.length; j++) {
+                //only if it's an int column show it
+                var tempValue = tempArrayToStoreColumnsForAvg[tempArrayToStoreColumns[j]];
+                var tempColName = tempArrayToStoreColumns[j];
+                var numberOfSamples = statResults.length;
+                if (!isNaN(parseInt(tempValue)) && tempColName != 'Description'
+                    && tempColName != 'SportId'
+                    && tempColName != 'AthleteID'
+                    && tempColName != 'Date') {
+                    var avg = Math.round(10 * (tempValue / numberOfSamples)) / 10;
+                    var tempString = "<tr id='tr'><td  style='border:groove'><b>" + tempColName + ": </b></td>";
+                    tempString += "<td style='border:groove;font-weight:600'>" + avg + "</td></tr>";
+                    $('#' + avgTableName).append(tempString);
+
+
+
+
+                }
+
+            }
+            if (!isMe)
+                BuildCharts();
+
+        }
+
+        function BuildCharts() {
+            google.charts.load('current', { 'packages': ['bar'] });
+            google.charts.setOnLoadCallback(drawChart);
+            function drawChart() {
+
+                // if (otherArrayToStoreColumnsForAvg.length == 0)
+                //     return;
+                var dataChart = [];
+                //dataChart.push(['Task', 'Me', 'Other']);
+
+
+                var ath1 = document.getElementById("myName").textContent;
+                var ath2 = document.getElementById("otherName").textContent;
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', '');
+                data.addColumn('number', ath1);
+                data.addColumn('number', ath2);
+
+
+
+
+                for (var j = 0; j < meArrayToStoreColumns.length; j++) {
+                    //only if it's an int column show it
+                    var meTempValue = meArrayToStoreColumnsForAvg[meArrayToStoreColumns[j]];
+                    var otherTempValue = otherArrayToStoreColumnsForAvg[meArrayToStoreColumns[j]];
+                    var tempColName = meArrayToStoreColumns[j];
+                    var meNumberOfSamples = meStatsResults.length;
+                    var otherNumberOfSamples = otherStatsResults.length;
+                    if (tempColName != 'Description'
+                        && tempColName != 'SportId'
+                        && tempColName != 'AthleteID'
+                        && tempColName != 'Date') {
+                        var meAvg = Math.round(10 * (meTempValue / meNumberOfSamples)) / 10;
+                        var othereAvg = Math.round(10 * (otherTempValue / otherNumberOfSamples)) / 10;
+                        dataChart.push([tempColName, meAvg, othereAvg]);
+                        data.addRows([[tempColName, meAvg, othereAvg]]);
+                    }
+                }
+
+
+                var options = {
+                    width: 900,
+
+                    chart: {
+                        title: 'CompareMe charts',
+                        subtitle: 'Compare 2 athletes in every aspect of the game',
+                        
+                    },
+                    series: {
+                        0: { axis: '' }, // Bind series 0 to an axis named 'distance'.
+                        1: { axis: '' } // Bind series 1 to an axis named 'brightness'.
+                    },
+                    axes: {
+                        y: {
+                            distance: { label: 'parsecs' }, // Left y-axis.
+                            brightness: { side: 'right', label: 'apparent magnitude' }, // Right y-axis.
+                          
+                        }
+                    }
+                };
+
+                var chart = new google.charts.Bar(document.getElementById('compareChart'));
+                //var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+                chart.draw(data, options);
+            }
+
+        }
+
+
+
+
+
+        function DisplayColumn(isGoaly, athleteType, colName) {
+            if (colName == "GameId" ||
+                colName == "AthleteID" ||
+                colName == "SportId" ||
+                colName == "Date")
+                return false;
+
+            if (isGoaly)
+                return true;
+            switch (athleteType) {
+                case AthleteSportType.Soccer:
+                    if (colName == "Saves_G" ||
+                    colName == "ShotsOnTarget_G" ||
+                    colName == "Goals_G")
+                        return false;
+                    break;
+                case AthleteSportType.BasketBall:
+                    return true;
+                    break;
+                case AthleteSportType.HandBall:
+                    if (colName == "Saves_G" ||
+                   colName == "Shots_G")
+                        return false;
+                    break;
+            }
+            return true;
+
+        }
+        function InitializeUI() {
+            FetchDataForUser();
+
+
+            switch (GetAthleteType()) {
+                case AthleteSportType.Soccer:
+                    DisplayClass("soccerStats");
+                    if (AthleteIsGoaly()) {
+                        DisplayClass("soccerStatsGoaley");
+                    }
+                    break;
+                case AthleteSportType.BasketBall:
+                    DisplayClass("basketballStats");
+                    break;
+                case AthleteSportType.HandBall:
+                    DisplayClass("handballStats");
+                    if (AthleteIsGoaly()) {
+                        DisplayClass("handballGoaley");
+                    }
+                    break;
+            }
+        }
+
+
+        $(document).ready(function () {
+
+
+            $(function () {
+                $("#datepicker").datepicker();
+            });
+
+
+            var myTeam = GetMyTeamName();
+            $("#myTeamName").val(myTeam);
+            var AllTeams = GetAllTeamsMinimized(function (teamRes) {
+                var options = $("#TeamsSelector");
+                options.empty();
+                teamRes = $.parseJSON(teamRes.d);
+                options.append("<option selected value = 'not-chosen'>Choose your Team</option>");
+
+                for (var i = 0; i < teamRes.length; i++) {
+                    options.append("<option selected value = '" + teamRes[i].TeamNumber + "'>" + teamRes[i].Team_name + "</option>");
+
+                }
+            });
+
+
+            FetchDataForUser();
+
+            InitializeUI();
+
+
+        });
+        function DisplayClass(clsName) {
+            $("." + clsName).css("display", "inherit");
+        }
+
+        function GetCleanDate(d) {
+            var milli = d.replace(/\/Date\((-?\d+)\)\//, '$1');
+            var date = new Date(parseInt(milli));
+            return date.ddmmyyyy();
+        }
+
+        Date.prototype.ddmmyyyy = function () {
+            var yyyy = this.getFullYear().toString();
+            var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
+            var dd = this.getDate().toString();
+            return (dd[1] ? dd : "0" + dd[0]) + "/" + (mm[1] ? mm : "0" + mm[0]) + "/" + yyyy; // padding
+        };
+
+
+
+        $(document).ready(function () {
+            var me;
+            tempAthleteId = GetAthleteId();
+            writeAthlete();
+            var athType = GetAthleteType();
+            var isgoaly = AthleteIsGoaly();
+            SearchAthByType(searchSuccess, athType, isgoaly, errorCB)
+            function searchSuccess(resutls) {
+                athleteList = $.parseJSON(resutls.d);
+                namesonly = [];
+                var temparr;
+                for (var i = 0; i < athleteList.length; i++) {
+                    if (tempAthleteId == athleteList[i].Id)
+                        me = athleteList[i];
+                    namesonly.push(athleteList[i].First_name + ' ' + athleteList[i].Last_name)
+                }
+                $("#inputName").autocomplete({
+                    source: namesonly
+                });
+
+                $("#myName").text(me.First_name + " " + me.Last_name);
+                $("#myAge").text(GetCleanDate(me.Dob));
+                $("#myHeight").text(me.Hight);
+                $("#myWeight").text(me.Weight);
+
+            }
+            $('#inputName').on('autocompleteselect', function (e, ui) {
+                var name = ui.item.value;
+                var tableText;
+                var other;
+                for (var i = 0; i < athleteList.length; i++) {
+                    if (name == athleteList[i].First_name + ' ' + athleteList[i].Last_name) {
+                        var newAthId = athleteList[i].Id;
+                        FetchDataForUser("avgTable2", athleteList[i].SportID, athleteList[i].Id)
+                        other = athleteList[i];
+
+                    }
+
+                }
+                if (other) {
+                    $(otherdata2).empty();
+                    tableText = " <tr><td>Name: </td><td id='otherName'></td></tr>  <tr><td>Height(cm): </td><td id='otherHeight'></td></tr>  <tr><td>Weight(kg) : </td><td id='otherWeight'></td></tr> <tr><td>Birth date: </td><td id='otherAge'></td></tr>";
+                    $(otherdata2).append(tableText);
+                    $("#otherName").text(other.First_name + " " + other.Last_name);
+                    $("#otherAge").text(GetCleanDate(other.Dob));
+                    $("#otherHeight").text(other.Hight);
+                    $("#otherWeight").text(other.Weight);
+                }
+
+
+            });
+        });
+
+
+
+    </script>
+
+</head>
+<body>
+    <h3 class="container">CompareMe</h3>
+
+    <h4 style="margin-left:38%;">
+        <label for="inputName" style="font-family:'Global User Interface'">CompareTo: </label>
+        <input id="inputName">
+    </h4>
+    <div class="modal-body" style="position:static; width:33%;float:left">
+
+
+
+        <div id="myData">
+            <table style="font-family:Chiller; font-size:large; font-weight:600">
+                <tr><td>Name : </td><td id="myName"></td></tr>
+                <tr><td>Height(cm) : </td><td id="myHeight"></td></tr>
+                <tr><td>Weight(kg) : </td><td id="myWeight"></td></tr>
+                <tr><td>Birth date : </td><td id="myAge"></td></tr>
+
+            </table>
+
+
+            <table id="avgTable" class="pattern-style-b" style="background-image:url(http://localhost:63621/css/source/table-images/pattern-head.png)"></table>
+        </div>
+
+        <div  id="otherData" style="float:left">
+            
+                <table id="otherdata2" ></table>
+
+            
+
+            <table id="avgTable2" class="pattern-style-b" style="background-color:#cc2e2e"></table>
+        </div>
+    </div>
+
+    <div class="row" style="width:30%; float:left">
+        <p id="compareChart" style="width: 100%; height: 500px;"></p>
+
+
+    </div>
+
+
+</body>
+</html>
